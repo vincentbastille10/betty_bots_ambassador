@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Ambassadeur – Betty Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.05);
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      color: #ff5ca0;
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin-top: 30px;
+      color: #444;
+    }
+    .summary {
+      margin-bottom: 30px;
+      background: #fff6fb;
+      border-radius: 12px;
+      padding: 15px 20px;
+    }
+    .summary div {
+      margin: 6px 0;
+    }
+    .summary strong {
+      color: #222;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #eee;
+      font-size: 0.95rem;
+    }
+    th {
+      background: #ffedf5;
+      color: #ff5ca0;
+      text-align: left;
+    }
+    .paid {
+      color: green;
+      font-weight: bold;
+    }
+    .pending {
+      color: orange;
+      font-weight: bold;
+    }
+    code {
+      background: #f0f0f0;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+    .small {
+      font-size: 0.85rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💼 Dashboard Ambassadeur</h1>
+    <p class="small">Dernière mise à jour : {{ now }}</p>
+
+    <div class="summary">
+      <div><strong>Ambassadeur :</strong> {{ ambassador["name"] }} ({{ ambassador["email"] }})</div>
+      <div><strong>Votre code ambassadeur :</strong> <code>{{ ref }}</code></div>
+      <div><strong>Ventes réalisées :</strong> {{ nb_ventes }}</div>
+      <div><strong>Ventes payées :</strong> {{ nb_payees }}</div>
+      <div><strong>Ventes en attente de paiement :</strong> {{ nb_en_attente }}</div>
+      <div><strong>Total commissions estimées :</strong> {{ total }} €</div>
+      <div class="small">
+        Calcul indicatif : 30% du montant HT de chaque abonnement payé.<br>
+        Les virements sont effectués selon les conditions convenues avec Betty Bot.
+      </div>
+    </div>
+
+    <h2>🧾 Détail des ventes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Client</th>
+          <th>Montant</th>
+          <th>Commission (30%)</th>
+          <th>Payé</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for vente in ventes %}
+        <tr>
+          <td>{{ vente["date"][:10] }}</td>
+          <td>{{ vente["customer_email"] or "-" }}</td>
+          <td>{{ vente["amount"] / 100 }} €</td>
+          <td>{{ (vente["amount"] * 0.30) / 100 | round(2) }} €</td>
+          <td>
+            {% if vente["paid"] %}
+              <span class="paid">✔️ Payé</span>
+            {% else %}
+              <span class="pending">En attente</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="5">Aucune vente enregistrée pour le moment.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
