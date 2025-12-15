@@ -72,6 +72,21 @@
       font-size: 0.85rem;
       color: #777;
     }
+    .share-block {
+      margin-top: 12px;
+      padding: 10px;
+      background: #f0f0f0;
+      border-radius: 8px;
+    }
+    .share-input {
+      width: 100%;
+      padding: 8px;
+      font-family: monospace;
+      font-size: 0.9rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
   </style>
 </head>
 <body>
@@ -82,12 +97,22 @@
     <div class="summary">
       <div><strong>Ambassadeur :</strong> {{ ambassador["name"] }} ({{ ambassador["email"] }})</div>
       <div><strong>Votre code ambassadeur :</strong> <code>{{ ref }}</code></div>
-      <div><strong>Ventes réalisées :</strong> {{ nb_ventes }}</div>
+
+      <div style="margin-top:10px;"><strong>Votre lien à partager :</strong></div>
+      <div class="share-block">
+        <input class="share-input" value="{{ share_link }}" readonly onclick="this.select();">
+        <div class="small">
+          Copiez-collez ce lien dans vos messages, emails, réseaux sociaux, etc.
+          Chaque abonnement pris via ce lien sera comptabilisé dans vos ventes.
+        </div>
+      </div>
+
+      <div style="margin-top:10px;"><strong>Ventes réalisées :</strong> {{ nb_ventes }}</div>
       <div><strong>Ventes payées :</strong> {{ nb_payees }}</div>
       <div><strong>Ventes en attente de paiement :</strong> {{ nb_en_attente }}</div>
       <div><strong>Total commissions estimées :</strong> {{ total }} €</div>
       <div class="small">
-        Calcul indicatif : 30% du montant HT de chaque abonnement payé.<br>
+        Calcul indicatif : 30% du montant de chaque abonnement payé.<br>
         Les virements sont effectués selon les conditions convenues avec Betty Bot.
       </div>
     </div>
