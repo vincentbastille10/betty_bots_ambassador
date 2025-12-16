@@ -4,399 +4,355 @@
 <div style="max-width:1040px;margin:32px auto;padding:0 1.5rem;color:#e5e7eb;">
 
   <!-- En-tête -->
-  <header style="margin-bottom:20px;">
+  <header style="margin-bottom:18px;">
     <p style="font-size:0.85rem;opacity:.75;margin:0 0 4px;">
-      Dernière mise à jour : {{ now }}
+      Programme officiel · Ambassadeurs Betty Bot
     </p>
     <h1 style="
-      font-size:clamp(1.8rem,3vw,2.4rem);
-      margin:0 0 4px;
+      font-size:clamp(1.8rem,3vw,2.3rem);
+      margin:0 0 6px;
       letter-spacing:-0.03em;
     ">
-      Dashboard <span style="color:#38bdf8;">Ambassadeur Betty&nbsp;Bot</span>
+      Devenez <span style="color:#38bdf8;">Ambassadeur Betty&nbsp;Bot</span>
     </h1>
-    <p style="margin:0;font-size:0.92rem;opacity:.85;">
-      {{ ambassador.name }} &nbsp;•&nbsp; {{ ambassador.email }}
+    <p style="margin:0;font-size:0.95rem;opacity:.85;">
+      Gagnez de l’argent en parlant d’un outil utile : une assistante IA qui répond à la place
+      de vos clients quand ils ne peuvent pas décrocher.
     </p>
   </header>
 
-  <!-- Lien à partager -->
-  <section style="
-    margin-bottom:18px;
-    padding:14px 16px;
-    border-radius:14px;
-    border:1px solid rgba(59,130,246,0.8);
-    background:radial-gradient(circle at top left,#0ea5e944,#1e293b 60%,#020617 100%);
-    font-size:0.9rem;
-  ">
-    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px;">
-      <span style="font-weight:600;">🔗 Votre lien à partager :</span>
-      <span style="
-        padding:4px 8px;
-        border-radius:999px;
-        border:1px solid rgba(148,163,184,0.8);
+  <!-- Layout 2 colonnes -->
+  <div style="display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start;">
+
+    <!-- Colonne gauche : explications + gains -->
+    <div style="flex:1 1 360px;min-width:280px;">
+
+      <!-- Bloc mission -->
+      <section style="
+        margin-bottom:16px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(148,163,184,0.7);
+        background:radial-gradient(circle at top left,#0ea5e933,#1f2937 65%,#020617 100%);
+        font-size:0.9rem;
+      ">
+        <div style="font-weight:600;margin-bottom:6px;">
+          🎯 Votre mission comme ambassadeur
+        </div>
+        <p style="margin:0 0 6px;">
+          Votre rôle est simple&nbsp;: présenter Betty Bot aux <strong>artisans, coachs,
+          thérapeutes, petites entreprises</strong> autour de vous, et leur envoyer
+          votre <strong>lien personnalisé</strong>.
+        </p>
+        <ul style="margin:0 0 4px 18px;padding:0;">
+          <li>Vous expliquez que Betty répond quand ils ne peuvent pas.</li>
+          <li>Vous partagez votre lien ambassadeur (email, WhatsApp, réseaux…)</li>
+          <li>Chaque abonnement pris via votre lien est <strong>rattaché à vous</strong>.</li>
+        </ul>
+        <p style="margin:6px 0 0;font-size:0.82rem;opacity:.78;">
+          Le bot garde les prospects au chaud, les qualifie, et envoie les leads par mail.
+          Vous, vous touchez une commission sur chaque abonnement actif.
+        </p>
+      </section>
+
+      <!-- Bloc rémunération -->
+      <section style="
+        margin-bottom:18px;
+        padding:14px 16px;
+        border-radius:14px;
+        border:1px solid rgba(59,130,246,0.9);
         background:rgba(15,23,42,0.95);
-        font-size:0.85rem;
+        font-size:0.9rem;
       ">
-        ref = <strong>{{ ref }}</strong>
-      </span>
-    </div>
-    <p style="margin:0 0 6px;word-break:break-all;">
-      <a href="{{ share_link }}" target="_blank" rel="noopener"
-         style="color:#93c5fd;text-decoration:underline;">
-        {{ share_link }}
-      </a>
-    </p>
-    <p style="margin:0;font-size:0.82rem;opacity:.8;">
-      Utilisez ce lien dans vos emails, messages WhatsApp, posts réseaux sociaux, etc.
-      Toute inscription passée par ce lien est automatiquement rattachée à votre compte ambassadeur.
-    </p>
-  </section>
+        <div style="font-weight:600;margin-bottom:8px;">
+          💶 Rémunération ambassadeur
+        </div>
+        <p style="margin:0 0 6px;">
+          Pour chaque abonnement Betty vendu grâce à votre lien :
+        </p>
+        <ul style="margin:0 0 6px 18px;padding:0;">
+          <li>
+            <strong>30&nbsp;% de 79,90&nbsp;€ à l’inscription</strong>  
+            → soit environ <strong>24&nbsp;€</strong> versés une fois.
+          </li>
+          <li>
+            Puis <strong>10&nbsp;€ / mois</strong> tant que l’abonnement reste actif.
+          </li>
+        </ul>
+        <p style="margin:4px 0 4px;font-size:0.85rem;opacity:.9;">
+          Exemple pour un abonnement qui reste 6 mois :
+        </p>
+        <ul style="margin:0 0 4px 18px;padding:0;">
+          <li>≈ 24&nbsp;€ à l’inscription (30&nbsp;% de 79,90&nbsp;€).</li>
+          <li>+ 10&nbsp;€ x 6 mois = 60&nbsp;€.</li>
+          <li>
+            Soit environ <strong>84&nbsp;€</strong> de commission pour un seul abonnement
+            resté 6 mois.
+          </li>
+        </ul>
+        <hr style="border:none;border-top:1px solid rgba(55,65,81,0.9);margin:8px 0;">
 
-  <!-- NAV TABS -->
-  <nav style="
-    display:flex;
-    gap:8px;
-    margin-bottom:14px;
-    font-size:0.9rem;
-  ">
-    <button type="button"
-      class="tab-btn"
-      data-tab="stats"
-      style="
-        padding:8px 14px;
-        border-radius:999px;
-        border:1px solid rgba(148,163,184,0.9);
-        background:rgba(15,23,42,0.95);
-        color:#e5e7eb;
-        cursor:pointer;
-      ">
-      📊 Tableau de bord
-    </button>
-    <button type="button"
-      class="tab-btn"
-      data-tab="scripts"
-      style="
-        padding:8px 14px;
-        border-radius:999px;
-        border:1px solid transparent;
-        background:rgba(15,23,42,0.7);
-        color:#9ca3af;
-        cursor:pointer;
-      ">
-      🗣️ Scripts & explications pour vos clients
-    </button>
-  </nav>
+        <div style="margin:0 0 2px;font-weight:600;">
+          📈 Exemple 1 – 1 abonnement vendu par semaine
+        </div>
+        <p style="margin:0 0 4px;font-size:0.85rem;opacity:.9;">
+          1 abonnement vendu par semaine = environ <strong>4 abonnements / mois</strong>.  
+          Sur 6 mois, cela fait <strong>24 abonnements</strong> restés actifs 6 mois.
+        </p>
+        <p style="margin:0 0 6px;font-size:0.85rem;">
+          24 abonnements × ~84&nbsp;€ ≈ <strong>2&nbsp;015&nbsp;€</strong> de commissions
+          sur 6 mois (si les abonnements restent actifs).
+        </p>
 
-  <!-- CONTENU : STATS -->
-  <section id="tab-stats" class="tab-section" style="display:block;">
+        <div style="margin:6px 0 2px;font-weight:600;">
+          🚀 Exemple 2 – 5 abonnements vendus par semaine
+        </div>
+        <p style="margin:0;font-size:0.85rem;">
+          5 abonnements / semaine = 20 / mois → 120 abonnements sur 6 mois.  
+          120 × ~84&nbsp;€ ≈ <strong>10&nbsp;000&nbsp;€</strong> de commissions sur 6 mois
+          (si les abonnements restent actifs).
+        </p>
 
-    <!-- Statistiques -->
-    <div style="
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-bottom:18px;
-    ">
-      <div style="
-        flex:1 1 140px;
-        min-width:140px;
+        <p style="margin:8px 0 0;font-size:0.8rem;opacity:.72;">
+          Ces montants sont indicatifs et supposent que les clients gardent leur abonnement
+          au moins 6 mois. Ils servent à vous donner un ordre d’idée du potentiel.
+        </p>
+      </section>
+
+      <!-- Bloc parcours client -->
+      <section style="
+        margin-bottom:16px;
         padding:12px 14px;
         border-radius:14px;
-        border:1px solid rgba(148,163,184,0.6);
-        background:rgba(15,23,42,0.95);
+        border:1px solid rgba(148,163,184,0.7);
+        background:rgba(15,23,42,0.96);
+        font-size:0.9rem;
       ">
-        <div style="font-size:0.8rem;opacity:.8;">Total abonnements générés</div>
-        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
-          {{ nb_ventes }}
+        <div style="font-weight:600;margin-bottom:6px;">
+          👣 Parcours côté client (à lui expliquer simplement)
         </div>
-      </div>
-
-      <div style="
-        flex:1 1 140px;
-        min-width:140px;
-        padding:12px 14px;
-        border-radius:14px;
-        border:1px solid rgba(34,197,94,0.7);
-        background:rgba(6,95,70,0.4);
-      ">
-        <div style="font-size:0.8rem;opacity:.8;">Abonnements payés</div>
-        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
-          {{ nb_payees }}
-        </div>
-      </div>
-
-      <div style="
-        flex:1 1 140px;
-        min-width:140px;
-        padding:12px 14px;
-        border-radius:14px;
-        border:1px solid rgba(234,179,8,0.7);
-        background:rgba(120,53,15,0.4);
-      ">
-        <div style="font-size:0.8rem;opacity:.8;">En attente de paiement</div>
-        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
-          {{ nb_en_attente }}
-        </div>
-      </div>
-
-      <div style="
-        flex:1 1 160px;
-        min-width:160px;
-        padding:12px 14px;
-        border-radius:14px;
-        border:1px solid rgba(59,130,246,0.8);
-        background:rgba(30,64,175,0.7);
-      ">
-        <div style="font-size:0.8rem;opacity:.8;">Total commissions versées / à verser*</div>
-        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
-          {{ "%.2f"|format(total) }}&nbsp;€
-        </div>
-      </div>
-    </div>
-
-    <p style="margin:0 0 12px;font-size:0.8rem;opacity:.7;">
-      * Montant basé sur les ventes marquées comme <strong>payées</strong> (colonne «&nbsp;Payé&nbsp;»).
-    </p>
-
-    <!-- Tableau des ventes -->
-    <div style="
-      border-radius:14px;
-      border:1px solid rgba(148,163,184,0.6);
-      overflow:hidden;
-      background:rgba(15,23,42,0.96);
-    ">
-      <table style="width:100%;border-collapse:collapse;font-size:0.86rem;">
-        <thead style="background:rgba(15,23,42,0.9);">
-          <tr>
-            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:left;">Date</th>
-            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:left;">Client</th>
-            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:right;">Montant</th>
-            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:center;">Payé</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% if ventes and ventes|length > 0 %}
-            {% for v in ventes %}
-              <tr style="border-top:1px solid rgba(31,41,55,1);">
-                <td style="padding:7px 10px;">
-                  {{ v["date"] }}
-                </td>
-                <td style="padding:7px 10px;">
-                  {{ v["customer_email"] or v["customer"] or "—" }}
-                </td>
-                <td style="padding:7px 10px;text-align:right;">
-                  {{ "%.2f"|format((v["amount"] or 0) / 100) }}&nbsp;€
-                </td>
-                <td style="padding:7px 10px;text-align:center;">
-                  {% if v["paid"] %}
-                    ✅
-                  {% else %}
-                    ⏳
-                  {% endif %}
-                </td>
-              </tr>
-            {% endfor %}
-          {% else %}
-            <tr>
-              <td colspan="4" style="padding:10px;text-align:center;opacity:.7;">
-                Aucune vente enregistrée pour le moment. Partagez votre lien pour commencer à générer des abonnements.
-              </td>
-            </tr>
-          {% endif %}
-        </tbody>
-      </table>
+        <ol style="margin:0 0 4px 18px;padding:0;">
+          <li style="margin-bottom:6px;">
+            <strong>Inscription à Betty</strong>  
+            Il clique sur votre lien, arrive sur la page Betty, choisit son pack
+            (avocat, coach, artisan…) et s’abonne (79,90&nbsp;€ / mois via Stripe).
+          </li>
+          <li style="margin-bottom:6px;">
+            <strong>Configuration du chatbot</strong>  
+            Après paiement, il configure son bot : couleur, avatar, message d’accueil,
+            email pour recevoir les leads…
+          </li>
+          <li style="margin-bottom:6px;">
+            <strong>Réception du script par email</strong>  
+            Il reçoit un email avec son <strong>code d’intégration</strong> (le script du bot).  
+            <em>Important :</em> si rien dans la boîte de réception, il doit
+            <strong>vérifier ses spams / courrier indésirable</strong>.
+          </li>
+          <li style="margin-bottom:6px;">
+            <strong>Intégration sur son site ou sa page</strong>  
+            Le script tient en général sur <strong>2 lignes</strong>.  
+            Il peut :
+            <ul style="margin:4px 0 0 18px;padding:0;">
+              <li>Le coller lui-même dans le code HTML (juste avant <code>&lt;/body&gt;</code>).</li>
+              <li>L’envoyer à son développeur ou à la personne qui gère son site.</li>
+              <li>Sur WordPress / Wix… utiliser l’option
+                <strong>“ajouter un widget / code HTML personnalisé”</strong> et coller le script.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <strong>Le bot commence à travailler</strong>  
+            Le chat apparaît, Betty accueille les visiteurs, pose les questions
+            importantes et envoie les contacts prêts à rappeler.
+          </li>
+        </ol>
+        <p style="margin:6px 0 0;font-size:0.8rem;opacity:.75;">
+          Vous pouvez résumer comme ça :
+          <em>“Vous vous abonnez, vous configurez Betty, vous recevez le code par mail,
+          vous le collez sur votre site (ou vous l’envoyez à votre développeur) et
+          ensuite Betty travaille seule.”</em>
+        </p>
+      </section>
     </div>
 
-  </section>
-
-  <!-- CONTENU : SCRIPTS & EXPLICATIONS -->
-  <section id="tab-scripts" class="tab-section" style="display:none;margin-top:8px;">
-
-    <h2 style="font-size:1.1rem;margin:0 0 8px;">
-      🗣️ Scripts & explications pour vos clients
-    </h2>
-    <p style="margin:0 0 14px;font-size:0.9rem;opacity:.85;">
-      Utilisez cette page comme boîte à outils&nbsp;: explication simple du parcours client + scripts prêts à copier-coller.
-    </p>
-
-    <!-- EXPLICATION POUR LE CLIENT : PARCOURS -->
+    <!-- Colonne droite : formulaire -->
     <div style="
-      margin-bottom:18px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(148,163,184,0.7);
-      background:rgba(15,23,42,0.96);
-      font-size:0.9rem;
+      flex:1 1 320px;
+      min-width:280px;
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,0.8);
+      background:rgba(15,23,42,0.98);
     ">
-      <div style="font-weight:600;margin-bottom:6px;">
-        👣 Comment ça se passe concrètement pour votre client ?
-      </div>
-      <ol style="margin:0 0 6px 18px;padding:0;">
-        <li style="margin-bottom:6px;">
-          <strong>1. Inscription à l’abonnement Betty</strong><br>
-          Votre client clique sur votre lien, arrive sur la page Betty, choisit son pack
-          (ex&nbsp;: avocat, coach, artisan…) et s’abonne via Stripe (79,90&nbsp;€ / mois).
-        </li>
-        <li style="margin-bottom:6px;">
-          <strong>2. Configuration de son chatbot</strong><br>
-          Après l’abonnement, il accède à la page de configuration&nbsp;:
-          couleur du bot, avatar, message d’accueil, email de réception des leads, etc.
-        </li>
-        <li style="margin-bottom:6px;">
-          <strong>3. Réception du script d’intégration par email</strong><br>
-          Betty lui envoie un email avec le <strong>code du chatbot</strong>
-          (un petit script JavaScript très court).  
-          <em>Important&nbsp;:</em> il doit vérifier ses spams / courrier indésirable
-          si l’email n’apparaît pas dans sa boîte de réception.
-        </li>
-        <li style="margin-bottom:6px;">
-          <strong>4. Intégration du bot sur son site / sa page</strong><br>
-          Le script tient en général sur <strong>2 lignes</strong>.  
-          Il a plusieurs options&nbsp;:
-          <ul style="margin:4px 0 0 18px;padding:0;">
-            <li>Le coller lui-même dans le code HTML de son site (juste avant <code>&lt;/body&gt;</code>).</li>
-            <li>L’envoyer à son <strong>développeur / personne technique</strong> qui le mettra en place.</li>
-            <li>Sur certains constructeurs (WordPress, Wix, etc.)&nbsp;:
-              utiliser l’option <strong>“ajouter un widget / code HTML personnalisé”</strong>
-              et coller le script dedans.
-            </li>
-          </ul>
-        </li>
-        <li>
-          <strong>5. Betty commence à travailler</strong><br>
-          Dès que le script est en place, le chat apparaît sur son site.
-          Betty accueille les visiteurs, pose les bonnes questions et
-          envoie les leads par email.
-        </li>
-      </ol>
-      <p style="margin:6px 0 0;font-size:0.8rem;opacity:.75;">
-        Vous pouvez simplement expliquer ça à vos clients en disant&nbsp;:
-        <em>“Vous vous abonnez, vous configurez votre bot, vous recevez le code par mail
-        et votre développeur (ou vous-même) le colle sur le site. Après ça, Betty travaille seule.”</em>
+      <h2 style="font-size:1.05rem;margin:0 0 10px;">
+        ✍️ Inscription Ambassadeur
+      </h2>
+      <p style="margin:0 0 10px;font-size:0.86rem;opacity:.85;">
+        Remplissez ce formulaire pour recevoir votre lien unique et accéder à votre
+        dashboard (statistiques, scripts, etc.).
       </p>
+
+      {% if error %}
+        <div style="
+          margin-bottom:10px;
+          padding:8px 10px;
+          border-radius:10px;
+          border:1px solid rgba(248,113,113,0.8);
+          background:rgba(127,29,29,0.7);
+          font-size:0.85rem;
+        ">
+          ⚠️ {{ error }}
+        </div>
+      {% endif %}
+
+      <form method="post" style="display:flex;flex-direction:column;gap:10px;font-size:0.9rem;">
+
+        <!-- Nom -->
+        <div>
+          <label for="name" style="display:block;margin-bottom:4px;">
+            Nom / Prénom
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            value="{{ request.form.name or '' }}"
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(55,65,81,0.9);
+              background:#020617;
+              color:#e5e7eb;
+            ">
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" style="display:block;margin-bottom:4px;">
+            Email (pour le dashboard et le suivi)
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            value="{{ request.form.email or '' }}"
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(55,65,81,0.9);
+              background:#020617;
+              color:#e5e7eb;
+            ">
+        </div>
+
+        <!-- Préférence de paiement -->
+        <div>
+          <label for="payout_preference" style="display:block;margin-bottom:4px;">
+            Comment préférez-vous être payé ?
+          </label>
+          <select
+            id="payout_preference"
+            name="payout_preference"
+            required
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(55,65,81,0.9);
+              background:#020617;
+              color:#e5e7eb;
+            ">
+            <option value="" {% if not request.form.payout_preference %}selected{% endif %} disabled>
+              Choisissez une option
+            </option>
+            <option value="virement" {% if request.form.payout_preference == 'virement' %}selected{% endif %}>
+              Virement bancaire
+            </option>
+            <option value="paypal" {% if request.form.payout_preference == 'paypal' %}selected{% endif %}>
+              Adresse PayPal
+            </option>
+            <option value="stripe" {% if request.form.payout_preference == 'stripe' %}selected{% endif %}>
+              Email de compte Stripe
+            </option>
+          </select>
+        </div>
+
+        <!-- Coordonnées de paiement (texte libre) -->
+        <div>
+          <label for="payout_identifier" style="display:block;margin-bottom:4px;">
+            Coordonnées de paiement
+            <span style="opacity:.75;font-size:0.8rem;">
+              (IBAN pour virement, email PayPal ou Stripe)
+            </span>
+          </label>
+          <input
+            type="text"
+            id="payout_identifier"
+            name="payout_identifier"
+            required
+            value="{{ request.form.payout_identifier or '' }}"
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(55,65,81,0.9);
+              background:#020617;
+              color:#e5e7eb;
+            ">
+        </div>
+
+        <!-- Conditions -->
+        <div style="
+          margin-top:4px;
+          padding:8px 9px;
+          border-radius:10px;
+          border:1px solid rgba(55,65,81,0.9);
+          background:rgba(15,23,42,0.9);
+          font-size:0.8rem;
+        ">
+          <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer;">
+            <input
+              type="checkbox"
+              name="accept_terms"
+              value="1"
+              required
+              style="margin-top:3px;">
+            <span>
+              Je confirme vouloir rejoindre le programme ambassadeur Betty Bot et je comprends que
+              les commissions sont versées en fonction des abonnements réellement payés
+              et actifs.
+            </span>
+          </label>
+        </div>
+
+        <!-- Bouton -->
+        <div style="margin-top:6px;">
+          <button type="submit" style="
+            width:100%;
+            padding:10px 16px;
+            border-radius:999px;
+            border:none;
+            background:linear-gradient(90deg,#3b82f6,#6366f1,#ec4899);
+            color:#f9fafb;
+            font-weight:600;
+            cursor:pointer;
+            box-shadow:0 0 18px rgba(37,99,235,0.6);
+          ">
+            Créer mon compte ambassadeur
+          </button>
+        </div>
+
+        <p style="margin:6px 0 0;font-size:0.8rem;opacity:.7;text-align:center;">
+          Après validation, vous recevrez votre lien unique et l’accès à votre dashboard par email.
+        </p>
+
+      </form>
     </div>
-
-    <!-- Script 1 : Appel téléphonique (artisans / coachs) -->
-    <div style="
-      margin-bottom:16px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(148,163,184,0.7);
-      background:rgba(15,23,42,0.95);
-      font-size:0.9rem;
-    ">
-      <div style="font-weight:600;margin-bottom:6px;">
-        ☎️ Script d’appel téléphonique (artisans / coachs)
-      </div>
-      <textarea readonly style="
-        width:100%;
-        min-height:170px;
-        border-radius:10px;
-        border:1px solid rgba(55,65,81,0.9);
-        background:#020617;
-        color:#e5e7eb;
-        font-size:0.86rem;
-        padding:10px;
-        resize:vertical;
-      ">Bonjour, je vous appelle parce que je pense que votre activité d’artisan / coach pourrait vraiment profiter d’une assistante IA comme Betty.
-
-Aujourd’hui, quand quelqu’un arrive sur votre site ou vous écrit en dehors de vos horaires, il se passe quoi ?
-Souvent : la personne attend, oublie… ou va chez un concurrent.
-
-Betty, c’est une assistante IA spécialisée pour les petites structures : artisans, coachs, thérapeutes, indépendants.
-Elle discute avec vos visiteurs comme une vraie personne, elle pose les bonnes questions (nom, email, téléphone, besoin),
-et vous envoie un récap clair par email.
-
-Résultat : vous rappelez uniquement les vrais prospects, au bon moment, au lieu de passer votre temps à trier des messages.
-
-L’abonnement est à 79,90 € / mois, sans engagement.
-Si Betty vous aide à récupérer ne serait-ce qu’1 ou 2 nouveaux clients par mois, elle s’auto-finance largement.
-
-Je peux vous envoyer le lien de présentation et la démo pour que vous voyiez comment ça fonctionne ?</textarea>
-    </div>
-
-    <!-- Script 2 : Message écrit (email / WhatsApp) artisans / coachs -->
-    <div style="
-      margin-bottom:16px;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid rgba(148,163,184,0.7);
-      background:rgba(15,23,42,0.95);
-      font-size:0.9rem;
-    ">
-      <div style="font-weight:600;margin-bottom:6px;">
-        💬 Script pour email / WhatsApp / réseaux sociaux
-      </div>
-      <textarea readonly style="
-        width:100%;
-        min-height:190px;
-        border-radius:10px;
-        border:1px solid rgba(55,65,81,0.9);
-        background:#020617;
-        color:#e5e7eb;
-        font-size:0.86rem;
-        padding:10px;
-        resize:vertical;
-      ">Bonjour,
-
-Je me permets de vous écrire car je pense que votre activité d’artisan / coach pourrait vraiment bénéficier d’une assistante IA comme Betty.
-
-Betty, c’est un petit chat sur votre site ou votre page qui discute avec vos prospects quand vous n’êtes pas disponible :
-– elle accueille les personnes,
-– pose les bonnes questions (nom, coordonnées, besoin),
-– et vous envoie un récap clair par email.
-
-Concrètement : au lieu de perdre des contacts en soirée, le week-end ou pendant vos séances, Betty les récupère et vous les met de côté.
-Vous n’avez plus qu’à les rappeler quand vous êtes disponible.
-
-L’abonnement est à 79,90 € / mois, sans engagement.
-Si Betty vous aide à transformer 1 ou 2 clients de plus par mois, elle est largement rentabilisée.
-
-Vous pouvez découvrir la présentation ici :
-{{ share_link }}
-
-Si vous le souhaitez, je peux aussi vous expliquer en 5 minutes comment ça s’appliquerait à votre cas précis (artisan, coach, thérapeute…).</textarea>
-    </div>
-
-    <p style="margin:0;font-size:0.82rem;opacity:.75;">
-      N’hésitez pas à adapter ces scripts avec vos mots. L’important reste simple&nbsp;:
-      <em>“Betty répond quand vous ne pouvez pas, elle garde les prospects au chaud
-      et vous envoie des vrais clients à rappeler.”</em>
-    </p>
-  </section>
+  </div>
 </div>
-
-<script>
-  (function () {
-    const tabs = document.querySelectorAll('.tab-btn');
-    const sections = {
-      stats: document.getElementById('tab-stats'),
-      scripts: document.getElementById('tab-scripts'),
-    };
-
-    tabs.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-tab');
-
-        Object.keys(sections).forEach(key => {
-          sections[key].style.display = (key === target) ? 'block' : 'none';
-        });
-
-        tabs.forEach(b => {
-          if (b === btn) {
-            b.style.borderColor = 'rgba(148,163,184,0.9)';
-            b.style.color = '#e5e7eb';
-            b.style.background = 'rgba(15,23,42,0.95)';
-          } else {
-            b.style.borderColor = 'transparent';
-            b.style.color = '#9ca3af';
-            b.style.background = 'rgba(15,23,42,0.7)';
-          }
-        });
-      });
-    });
-  })();
-</script>
 
 {% endblock %}
