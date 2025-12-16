@@ -1,314 +1,199 @@
 {% extends "base.html" %}
+{% block title %}Devenir Ambassadeur Betty Bot{% endblock %}
+
 {% block content %}
 
-<div style="max-width:960px;margin:32px auto;padding:0 1.5rem;color:#e5e7eb;">
-
-  <!-- HERO / TITRE -->
-  <header style="text-align:left;margin-bottom:24px;">
-    <h1 style="
-      font-size:clamp(2rem,3vw,2.6rem);
-      margin:0 0 8px;
-      letter-spacing:-0.03em;
-    ">
-      Devenez ambassadeur <span style="color:#38bdf8;">Betty&nbsp;Bot</span>
-    </h1>
-    <p style="margin:0;font-size:0.98rem;opacity:.9;max-width:640px;">
-      Recommandez Betty à votre réseau (avocats, médecins, artisans, thérapeutes, agences…)
-      et touchez des commissions récurrentes sur chaque abonnement actif.
-    </p>
-  </header>
-
-  <!-- CADRE COMMISSIONS + EXEMPLES -->
-  <section style="
-    margin-bottom:26px;
-    padding:18px 20px;
-    border-radius:18px;
-    border:1px solid rgba(148,163,184,0.7);
-    background:radial-gradient(circle at top left,#0ea5e944,#6366f144 40%,#020617 92%);
-  ">
-    <h2 style="margin:0 0 10px;font-size:1.15rem;">
-      💸 Comment vous êtes rémunéré&nbsp;?
-    </h2>
-
-    <p style="margin:0 0 10px;font-size:0.96rem;opacity:.9;">
-      Pour chaque <strong>abonnement Betty à 79,90&nbsp;€ / mois</strong) vendu grâce à votre lien ambassadeur&nbsp;:
-    </p>
-
-    <ul style="margin:0 0 14px 18px;padding:0;font-size:0.95rem;">
-      <li>
-        <strong>30&nbsp;% sur les 79,90&nbsp;€ de première inscription</strong>
-        &nbsp;→ soit <strong>23,97&nbsp;€</strong> versés une fois, dès la vente.
-      </li>
-      <li>
-        <strong>10&nbsp;€ par mois</strong> tant que le client reste abonné.
-      </li>
-    </ul>
-
-    <!-- Exemple 1 -->
-    <div style="
-      margin-top:4px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(15,23,42,0.9);
-      border:1px dashed rgba(148,163,184,0.9);
-      font-size:0.9rem;
-    ">
-      <div style="font-weight:600;margin-bottom:6px;">
-        Exemple 1&nbsp;: <strong>1 abonnement vendu par semaine</strong>
-        (on simplifie à 4 semaines par mois → 24 ventes en 6&nbsp;mois)
-      </div>
-      <ul style="margin:0 0 4px 18px;padding:0;">
-        <li>Prime d’inscription&nbsp;: 23,97&nbsp;€ × 24 ≈ <strong>575&nbsp;€</strong></li>
-        <li>Revenus mensuels&nbsp;: 10&nbsp;€ × 6&nbsp;mois × 24 ventes = <strong>1&nbsp;440&nbsp;€</strong></li>
-      </ul>
-      <div>
-        👉 <strong>Total sur 6 mois ≈ 2&nbsp;015&nbsp;€</strong>
-        si tous les abonnements restent actifs.
-      </div>
-    </div>
-
-    <!-- Exemple 2 -->
-    <div style="
-      margin-top:10px;
-      padding:10px 12px;
-      border-radius:14px;
-      background:rgba(17,24,39,0.9);
-      border:1px dashed rgba(129,140,248,0.95);
-      font-size:0.9rem;
-    ">
-      <div style="font-weight:600;margin-bottom:6px;">
-        Exemple 2&nbsp;: <strong>5 abonnements vendus par semaine</strong>
-        (≈ 120 ventes en 6&nbsp;mois)
-      </div>
-      <ul style="margin:0 0 4px 18px;padding:0;">
-        <li>Prime d’inscription&nbsp;: 23,97&nbsp;€ × 120 ≈ <strong>2&nbsp;876&nbsp;€</strong></li>
-        <li>Revenus mensuels&nbsp;: 10&nbsp;€ × 6&nbsp;mois × 120 ventes = <strong>7&nbsp;200&nbsp;€</strong></li>
-      </ul>
-      <div>
-        👉 <strong>Total sur 6 mois ≈ 10&nbsp;076&nbsp;€</strong>
-        si tous les abonnements restent actifs.
-      </div>
-    </div>
-
-    <p style="margin:10px 0 0;font-size:0.82rem;opacity:.75;">
-      Ces montants sont donnés à titre indicatif, en supposant que tous les abonnements restent actifs pendant 6&nbsp;mois.
-    </p>
-  </section>
-
-  <!-- FORMULAIRE D'INSCRIPTION -->
-  <section style="
-    display:flex;
-    flex-wrap:wrap;
-    gap:18px;
-    align-items:flex-start;
-  ">
-
-    <div style="
-      flex:1 1 320px;
-      max-width:480px;
-      border-radius:18px;
-      border:1px solid rgba(30,64,175,0.7);
-      background:rgba(15,23,42,0.96);
-      padding:18px 20px 20px;
-      box-shadow:0 18px 40px rgba(15,23,42,0.8);
-    ">
-      <h2 style="margin:0 0 12px;font-size:1.05rem;">
-        ✍️ Inscription ambassadeur
-      </h2>
-      <p style="margin:0 0 12px;font-size:0.9rem;opacity:.8;">
-        Remplissez ce formulaire, vous recevrez immédiatement votre
-        <strong>lien personnel</strong> et l’accès à votre <strong>dashboard</strong>.
+<div class="card">
+  <div class="grid-2" style="align-items:flex-start;gap:24px;">
+    <!-- COLONNE GAUCHE : pitch + chiffres -->
+    <div>
+      <h2>Devenez ambassadeur Betty Bot</h2>
+      <p class="lead">
+        Recommandez une assistante IA qui travaille 24h/24 pour les artisans,
+        cabinets et petites entreprises — et touchez une commission sur chaque abonnement.
       </p>
 
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div style="margin-bottom:10px;">
-            {% for category, message in messages %}
-              <div style="
-                padding:8px 10px;
-                border-radius:10px;
-                font-size:0.86rem;
-                margin-bottom:6px;
-                {% if category == 'error' %}
-                  background:rgba(185,28,28,0.12);
-                  border:1px solid rgba(248,113,113,0.6);
-                  color:#fecaca;
-                {% else %}
-                  background:rgba(21,128,61,0.12);
-                  border:1px solid rgba(74,222,128,0.7);
-                  color:#bbf7d0;
-                {% endif %}
-              ">
-                {{ message }}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
-
-      <form method="post" action="{{ url_for('inscription') }}" style="display:flex;flex-direction:column;gap:10px;">
-
-        <div>
-          <label for="name" style="font-size:0.88rem;display:block;margin-bottom:2px;">
-            Nom / Prénom
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            required
-            style="
-              width:100%;
-              padding:9px 10px;
-              border-radius:10px;
-              border:1px solid rgba(148,163,184,0.8);
-              background:#020617;
-              color:#e5e7eb;
-              font-size:0.92rem;
-            "
-          >
+      <div style="
+        margin-top:10px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(129,140,248,0.8);
+        background:radial-gradient(circle at top left,
+          rgba(79,70,229,0.25),
+          rgba(15,23,42,0.95));
+        font-size:13px;
+      ">
+        <div style="font-weight:600;margin-bottom:6px;">
+          💶 Rémunération : simple et transparente
         </div>
-
-        <div>
-          <label for="email" style="font-size:0.88rem;display:block;margin-bottom:2px;">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            style="
-              width:100%;
-              padding:9px 10px;
-              border-radius:10px;
-              border:1px solid rgba(148,163,184,0.8);
-              background:#020617;
-              color:#e5e7eb;
-              font-size:0.92rem;
-            "
-          >
-        </div>
-
-        <div>
-          <label for="payout_method" style="font-size:0.88rem;display:block;margin-bottom:2px;">
-            Mode de versement préféré
-          </label>
-          <select
-            id="payout_method"
-            name="payout_method"
-            required
-            style="
-              width:100%;
-              padding:9px 10px;
-              border-radius:10px;
-              border:1px solid rgba(148,163,184,0.8);
-              background:#020617;
-              color:#e5e7eb;
-              font-size:0.9rem;
-            "
-          >
-            <option value="">Sélectionnez…</option>
-            <option value="iban">Virement bancaire (IBAN)</option>
-            <option value="paypal">Adresse PayPal</option>
-            <option value="stripe">Compte Stripe / lien de paiement</option>
-          </select>
-        </div>
-
-        <div>
-          <label for="payout_details" style="font-size:0.88rem;display:block;margin-bottom:2px;">
-            Détails pour le versement
-          </label>
-          <textarea
-            id="payout_details"
-            name="payout_details"
-            rows="3"
-            required
-            style="
-              width:100%;
-              padding:9px 10px;
-              border-radius:10px;
-              border:1px solid rgba(148,163,184,0.8);
-              background:#020617;
-              color:#e5e7eb;
-              font-size:0.9rem;
-              resize:vertical;
-            "
-            placeholder="IBAN complet, ou adresse PayPal, ou identifiant Stripe…"
-          ></textarea>
-        </div>
-
-        <button type="submit"
-          style="
-            margin-top:6px;
-            padding:10px 16px;
-            border-radius:999px;
-            border:none;
-            background:linear-gradient(90deg,#0ea5e9,#6366f1,#ec4899);
-            color:#f9fafb;
-            font-weight:600;
-            font-size:0.98rem;
-            cursor:pointer;
-            box-shadow:0 14px 30px rgba(37,99,235,0.6);
-          ">
-          Créer mon compte ambassadeur
-        </button>
-
-        <p style="margin:6px 0 0;font-size:0.78rem;opacity:.7;">
-          En vous inscrivant, vous confirmez vouloir recevoir des informations sur vos ventes et paiements.
+        <ul style="padding-left:18px;margin:0;font-size:13px">
+          <li><strong>30&nbsp;% de 79,90&nbsp;€</strong> à chaque nouvelle inscription
+              (≈ <strong>24&nbsp;€</strong> par abonnement).</li>
+          <li><strong>+ 10&nbsp;€ / mois</strong> tant que l’abonnement reste actif.</li>
+        </ul>
+        <p class="hint" style="margin-top:6px;">
+          Vous êtes payé en tant que prescripteur : Betty Bot est une solution
+          d’abonnement, vous touchez votre part sur la durée.
         </p>
-      </form>
+      </div>
+
+      <!-- Bloc exemples chiffrés -->
+      <div style="
+        margin-top:14px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(148,163,184,0.7);
+        background:radial-gradient(circle at top left,
+          rgba(15,118,110,0.18),
+          rgba(15,23,42,0.96));
+        font-size:13px;
+      ">
+        <div style="font-weight:600;margin-bottom:6px;">
+          📊 Exemples de revenus potentiels
+        </div>
+
+        <p style="margin:0 0 6px;">
+          <strong>Hypothèse :</strong> un abonnement reste actif au moins 6&nbsp;mois.
+        </p>
+
+        <ul style="padding-left:18px;margin:0;">
+          <li style="margin-bottom:4px;">
+            <strong>1 abonnement vendu par semaine</strong>
+            (≈ 4 par mois, soit 24 en 6&nbsp;mois) :
+            <br>
+            • Prime d’inscription ≈ <strong>24&nbsp;€ × 24 = 576&nbsp;€</strong><br>
+            • Récurrent mensuel ≈ <strong>10&nbsp;€ × 24 = 240&nbsp;€ / mois</strong><br>
+            • Sur 6&nbsp;mois ≈ <strong>576&nbsp;€ + (240&nbsp;€ × 6) = 2&nbsp;016&nbsp;€</strong> cumulés.
+          </li>
+          <li>
+            <strong>5 abonnements vendus par semaine</strong>
+            (≈ 20 par mois, soit 120 en 6&nbsp;mois) :
+            <br>
+            • Prime d’inscription ≈ <strong>24&nbsp;€ × 120 = 2&nbsp;880&nbsp;€</strong><br>
+            • Récurrent mensuel ≈ <strong>10&nbsp;€ × 120 = 1&nbsp;200&nbsp;€ / mois</strong><br>
+            • Sur 6&nbsp;mois ≈ <strong>2&nbsp;880&nbsp;€ + (1&nbsp;200&nbsp;€ × 6) = 10&nbsp;080&nbsp;€</strong>.
+          </li>
+        </ul>
+
+        <p class="hint" style="margin-top:6px;">
+          Ce sont des ordres de grandeur pour vous aider à vous projeter. Les résultats
+          réels dépendent de la durée de vie des abonnements et de votre activité.
+        </p>
+      </div>
+
+      <p class="muted" style="margin-top:10px;">
+        Vous êtes libre : vous pouvez en faire un petit complément de revenu, ou
+        une vraie activité de vente spécialisée dans les solutions IA.
+      </p>
     </div>
 
-    <!-- Panneau info / rappel lien -->
-    <div style="
-      flex:1 1 260px;
-      min-width:260px;
-      font-size:0.92rem;
-      opacity:.9;
-    ">
-      <h3 style="margin:0 0 8px;font-size:1rem;">
-        🎯 Votre mission en tant qu’ambassadeur
-      </h3>
-      <p style="margin:0 0 8px;">
-        • Partager votre <strong>lien personnel</strong> Betty Bot à votre réseau.<br>
-        • Utiliser les <strong>scripts fournis</strong> (téléphone, email, réseaux sociaux).<br>
-        • Aider les pros à comprendre que Betty <strong>répond quand ils ne peuvent pas</strong>
-        et <strong>transforme les visiteurs en clients à rappeler</strong>.
-      </p>
-      <p style="margin:0 0 8px;">
-        Vos commissions sont calculées automatiquement à partir des abonnements
-        passés via votre lien. Vous pouvez consulter vos ventes à tout moment dans
-        votre <strong>dashboard ambassadeur</strong>.
+    <!-- COLONNE DROITE : formulaire inscription -->
+    <div>
+      <h3 style="margin-top:0;">Inscription au programme ambassadeur</h3>
+      <p class="muted" style="margin-bottom:10px;">
+        Remplissez ce formulaire pour recevoir votre code ambassadeur et votre lien à partager.
+        Vous serez redirigé directement vers votre <strong>dashboard</strong>.
       </p>
 
-      {% if link %}
+      {% if error %}
         <div style="
-          margin-top:14px;
-          padding:10px 12px;
-          border-radius:14px;
-          border:1px solid rgba(52,211,153,0.8);
-          background:rgba(6,95,70,0.3);
-          font-size:0.9rem;
+          margin-bottom:10px;
+          padding:8px 10px;
+          border-radius:10px;
+          border:1px solid rgba(248,113,113,0.8);
+          background:rgba(127,29,29,0.75);
+          font-size:13px;
         ">
-          <div style="font-weight:600;margin-bottom:4px;">✅ Inscription réussie</div>
-          <p style="margin:0 0 6px;">
-            Voici le lien vers votre <strong>dashboard ambassadeur</strong>&nbsp;:
-          </p>
-          <p style="margin:0 0 8px;word-break:break-all;">
-            <a href="{{ link }}" style="color:#6ee7b7;text-decoration:underline;">
-              {{ link }}
-            </a>
-          </p>
-          <p style="margin:0;font-size:0.8rem;opacity:.9;">
-            Pensez à l’enregistrer (favoris) : c’est là que vous verrez vos ventes,
-            vos commissions et les scripts pour convaincre vos clients.
-          </p>
+          {{ error }}
         </div>
       {% endif %}
-    </div>
 
-  </section>
+      <form method="post" novalidate>
+        <div class="field-group">
+          <div class="field-label">Votre nom complet *</div>
+          <input
+            type="text"
+            name="name"
+            placeholder="Ex. : Vincent Bastille"
+            value="{{ request.form.name or '' }}"
+            required
+          >
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Votre adresse email *</div>
+          <input
+            type="email"
+            name="email"
+            placeholder="vous@exemple.com"
+            value="{{ request.form.email or '' }}"
+            required
+          >
+          <div class="hint">
+            Cette adresse servira à vous retrouver si vous perdez votre lien.
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Préférence de paiement *</div>
+          <select name="payout_preference" required>
+            <option value="">Choisissez une option…</option>
+            <option value="virement"
+              {% if request.form.payout_preference == 'virement' %}selected{% endif %}>
+              Virement bancaire (RIB / IBAN)
+            </option>
+            <option value="stripe"
+              {% if request.form.payout_preference == 'stripe' %}selected{% endif %}>
+              Compte Stripe (email de connexion)
+            </option>
+            <option value="autre"
+              {% if request.form.payout_preference == 'autre' %}selected{% endif %}>
+              Autre méthode (à discuter)
+            </option>
+          </select>
+          <div class="hint">
+            Nous pourrons ajuster avec vous le mode de paiement exact si besoin.
+          </div>
+        </div>
+
+        <div class="field-group">
+          <div class="field-label">Coordonnées pour vous payer *</div>
+          <textarea
+            name="payout_identifier"
+            placeholder="Ex. : IBAN complet, ou email Stripe, ou autre info utile"
+            required>{{ request.form.payout_identifier or '' }}</textarea>
+          <div class="hint">
+            Ces informations restent confidentielles et servent uniquement à vous verser vos commissions.
+          </div>
+        </div>
+
+        <div class="field-group" style="font-size:12px;">
+          <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer;">
+            <input
+              type="checkbox"
+              name="accept_terms"
+              value="yes"
+              style="width:auto;margin-top:2px;"
+              {% if request.form.accept_terms %}checked{% endif %}
+            >
+            <span>
+              J’accepte de recommander Betty Bot de manière honnête, sans promesse exagérée,
+              et je comprends que les revenus dépendent du nombre d’abonnements réellement souscrits.
+            </span>
+          </label>
+        </div>
+
+        <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+          <button type="submit" class="btn-primary">
+            🎯 Créer mon compte ambassadeur
+          </button>
+          <span class="hint">
+            Après validation, vous arriverez sur votre dashboard avec votre lien et vos scripts de vente.
+          </span>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
 
 {% endblock %}
