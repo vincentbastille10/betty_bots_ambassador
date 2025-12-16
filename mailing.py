@@ -1,57 +1,76 @@
 import os
 from mailjet_rest import Client
 
-def send_ambassador_welcome_email(to_email: str, firstname: str, ref_code: str):
-    api_key = os.getenv("MAILJET_API_KEY")
-    api_secret = os.getenv("MAILJET_API_SECRET")
-    from_email = os.getenv("MAIL_FROM_EMAIL", "spectramediabots@gmail.com")
-    from_name = os.getenv("MAIL_FROM_NAME", "Betty Bots")
-    reply_to = os.getenv("MAIL_REPLY_TO", from_email)
-    base_url = os.getenv("APP_BASE_URL", "").rstrip("/")
+MAILJET_API_KEY = os.environ.get("MAILJET_API_KEY", "")
+MAILJET_API_SECRET = os.environ.get("MAILJET_API_SECRET", "")
+MAILJET_SENDER_EMAIL = os.environ.get("MAILJET_SENDER_EMAIL", "spectramediabots@gmail.com")
+MAILJET_SENDER_NAME = os.environ.get("MAILJET_SENDER_NAME", "Betty Bots")
 
-    if not api_key or not api_secret:
-        raise RuntimeError("MAILJET_API_KEY / MAILJET_API_SECRET manquants")
-    if not base_url:
-        raise RuntimeError("APP_BASE_URL manquant")
 
-    dashboard_url = f"{base_url}/dashboard/{ref_code}"
-    subject = "✅ Bienvenue chez les Ambassadeurs Betty Bots — votre lien personnel"
+def send_ambassador_welcome_email(
+    to_email: str,
+    firstname: str,
+    code: str,
+    dashboard_url: str,
+    short_link: str,
+    tracking_target: str,
+    is_new: bool = True,
+):
+    if not MAILJET_API_KEY or not MAILJET_API_SECRET:
+        raise RuntimeError("MAILJET_API_KEY / MAILJET_API_SECRET manquantes")
+
+    subject = "Votre lien Ambassadeur Betty Bot (dashboard + lien traqué)"
+    if not is_new:
+        subject = "Votre lien Ambassadeur Betty Bot (rappel)"
+
+    hello = f"Bonjour {firstname}," if firstname else "Bonjour,"
 
     text_part = (
-        f"Bonjour {firstname},\n\n"
-        "Bienvenue chez les Ambassadeurs Betty Bots 🎉\n\n"
-        "Voici votre lien personnel (à conserver) :\n"
-        f"{dashboard_url}\n\n"
-        f"Votre code ambassadeur : {ref_code}\n\n"
-        "Besoin d’aide ? Répondez simplement à ce mail.\n\n"
-        "Vincent — Spectra Media AI\n"
+        f"{hello}\n\n"
+        f"Voici votre accès Ambassadeur Betty Bot :\n\n"
+        f"- Dashboard : {dashboard_url}\n"
+        f"- Lien à partager (traqué) : {short_link}\n"
+        f"- Cible finale : {tracking_target}\n"
+        f"- Votre code : {code}\n\n"
+        f"Gardez ce mail : il contient vos liens.\n"
+        f"— Spectra Media AI\n"
     )
 
     html_part = f"""
-    <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.5;color:#0f172a">
-      <h2 style="margin:0 0 10px">✅ Bienvenue chez les Ambassadeurs Betty Bots</h2>
-      <p style="margin:0 0 14px">Bonjour <strong>{firstname}</strong>,</p>
-      <p style="margin:0 0 14px">Voici votre lien personnel (à conserver) :</p>
-      <p style="margin:0 0 18px">
-        <a href="{dashboard_url}" style="display:inline-block;background:#7c3aed;color:#fff;text-decoration:none;padding:12px 16px;border-radius:12px">
-          Ouvrir mon dashboard
-        </a>
-      </p>
-      <p style="margin:0 0 18px"><strong>Votre code :</strong> {ref_code}</p>
-      <p style="margin:0">Vincent — Spectra Media AI</p>
+    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#0f172a">
+      <p>{hello}</p>
+      <p>Voici votre accès <strong>Ambassadeur Betty Bot</strong> :</p>
+
+      <div style="padding:12px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc">
+        <p style="margin:0 0 8px;"><strong>Dashboard</strong> :<br>
+          <a href="{dashboard_url}">{dashboard_url}</a>
+        </p>
+        <p style="margin:0 0 8px;"><strong>Lien à partager (traqué)</strong> :<br>
+          <a href="{short_link}">{short_link}</a>
+        </p>
+        <p style="margin:0 0 8px;"><strong>Cible finale</strong> :<br>
+          <a href="{tracking_target}">{tracking_target}</a>
+        </p>
+        <p style="margin:0;"><strong>Votre code</strong> : <code>{code}</code></p>
+      </div>
+
+      <p style="margin-top:14px;">Gardez ce mail : il contient vos liens.</p>
+      <p style="opacity:.75;margin-top:10px;">— Spectra Media AI</p>
     </div>
     """
 
-    mailjet = Client(auth=(api_key, api_secret), version="v3.1")
+    mailjet = Client(auth=(MAILJET_API_KEY, MAILJET_API_SECRET), version="v3.1")
+
     data = {
-        "Messages": [{
-            "From": {"Email": from_email, "Name": from_name},
-            "To": [{"Email": to_email, "Name": firstname or to_email}],
-            "ReplyTo": {"Email": reply_to, "Name": from_name},
-            "Subject": subject,
-            "TextPart": text_part,
-            "HTMLPart": html_part,
-        }]
+        "Messages": [
+            {
+                "From": {"Email": MAILJET_SENDER_EMAIL, "Name": MAILJET_SENDER_NAME},
+                "To": [{"Email": to_email}],
+                "Subject": subject,
+                "TextPart": text_part,
+                "HTMLPart": html_part,
+            }
+        ]
     }
 
     result = mailjet.send.create(data=data)
