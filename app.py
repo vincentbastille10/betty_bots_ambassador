@@ -282,6 +282,63 @@ def redirect_with_ref(code):
 
     return redirect(build_tracking_target(ref_code))
 
+from flask import abort, Response
+
+@app.route("/admin/ambassadors")
+def admin_ambassadors():
+    # Protection simple par token (mets ADMIN_TOKEN dans Render > Environment)
+    token = (request.args.get("token") or "").strip()
+    admin_token = (os.environ.get("ADMIN_TOKEN") or "").strip()
+    if not admin_token or token != admin_token:
+        abort(403)
+
+    conn = get_db()
+    rows = conn.execute(
+        """
+        SELECT id, name, email, code, payout_preference, payout_identifier,
+               created_at, clicks, signups
+        FROM ambassadors
+        ORDER BY datetime(created_at) DESC
+        """
+    ).fetchall()
+    conn.close()
+
+    return render_template("admin_ambassadors.html", ambassadors=rows)
+
+
+@app.route("/admin/ambassadors.csv")
+def admin_ambassadors_csv():
+    token = (request.args.get("token") or "").strip()
+    admin_token = (os.environ.get("ADMIN_TOKEN") or "").strip()
+    if not admin_token or token != admin_token:
+        abort(403)
+
+    conn = get_db()
+    rows = conn.execute(
+        """
+        SELECT id, name, email, code, payout_preference, payout_identifier,
+               created_at, clicks, signups
+        FROM ambassadors
+        ORDER BY datetime(created_at) DESC
+        """
+    ).fetchall()
+    conn.close()
+
+    # CSV simple
+    header = "id,name,email,code,payout_preference,payout_identifier,created_at,clicks,signups\n"
+    lines = [header]
+    for r in rows:
+        def esc(v):
+            v = "" if v is None else str(v)
+            v = v.replace('"', '""')
+            return f'"{v}"'
+        lines.append(",".join([
+            esc(r["id"]), esc(r["name"]), esc(r["email"]), esc(r["code"]),
+            esc(r["payout_preference"]), esc(r["payout_identifier"]),
+            esc(r["created_at"]), esc(r["clicks"]), esc(r["signups"])
+        ]) + "\n")
+
+    return Response("".join(lines), mimetype="text/csv")
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
