@@ -4,7 +4,7 @@ import secrets
 import datetime
 from contextlib import closing
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, abort, Response
 
 # --------------------
 # dotenv (OPTIONNEL)
@@ -31,8 +31,14 @@ except Exception:
 # Config
 # --------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_DIR = os.path.join(BASE_DIR, "database")
-DB_PATH = os.path.join(DB_DIR, "betty.db")
+
+# ✅ IMPORTANT : Render Disk => DB_PATH doit venir de l'env si présent
+# Ex: DB_PATH=/var/data/betty.db
+DB_PATH = (os.environ.get("DB_PATH") or "").strip()
+if not DB_PATH:
+    DB_PATH = os.path.join(BASE_DIR, "database", "betty.db")
+
+DB_DIR = os.path.dirname(DB_PATH)
 
 APP_BASE_URL = (os.environ.get("APP_BASE_URL") or "").strip().rstrip("/")
 if not APP_BASE_URL:
@@ -208,6 +214,7 @@ def inscription():
                 except Exception:
                     app.logger.exception("Erreur envoi email Mailjet (inscription ambassadeur)")
 
+            # ✅ Redirection dashboard OK
             return redirect(url_for("dashboard", code=code))
 
     return render_template("inscription.html", error=error)
@@ -240,7 +247,6 @@ def dashboard():
         est_monthly_recurring = signups * recurring_per_month
         est_6m_total = signups * (upfront_per + recurring_per_month * 6)
 
-        # Pour être cohérent avec APP_BASE_URL
         short_link = build_short_link(ambassador["code"])
         tracking_link = short_link
 
@@ -282,26 +288,23 @@ def redirect_with_ref(code):
 
     return redirect(build_tracking_target(ref_code))
 
-from flask import abort, Response
 
 @app.route("/admin/ambassadors")
 def admin_ambassadors():
-    # Protection simple par token (mets ADMIN_TOKEN dans Render > Environment)
     token = (request.args.get("token") or "").strip()
     admin_token = (os.environ.get("ADMIN_TOKEN") or "").strip()
     if not admin_token or token != admin_token:
         abort(403)
 
-    conn = get_db()
-    rows = conn.execute(
-        """
-        SELECT id, name, email, code, payout_preference, payout_identifier,
-               created_at, clicks, signups
-        FROM ambassadors
-        ORDER BY datetime(created_at) DESC
-        """
-    ).fetchall()
-    conn.close()
+    with closing(get_db()) as conn:
+        rows = conn.execute(
+            """
+            SELECT id, name, email, code, payout_preference, payout_identifier,
+                   created_at, clicks, signups
+            FROM ambassadors
+            ORDER BY datetime(created_at) DESC
+            """
+        ).fetchall()
 
     return render_template("admin_ambassadors.html", ambassadors=rows)
 
@@ -313,20 +316,19 @@ def admin_ambassadors_csv():
     if not admin_token or token != admin_token:
         abort(403)
 
-    conn = get_db()
-    rows = conn.execute(
-        """
-        SELECT id, name, email, code, payout_preference, payout_identifier,
-               created_at, clicks, signups
-        FROM ambassadors
-        ORDER BY datetime(created_at) DESC
-        """
-    ).fetchall()
-    conn.close()
+    with closing(get_db()) as conn:
+        rows = conn.execute(
+            """
+            SELECT id, name, email, code, payout_preference, payout_identifier,
+                   created_at, clicks, signups
+            FROM ambassadors
+            ORDER BY datetime(created_at) DESC
+            """
+        ).fetchall()
 
-    # CSV simple
     header = "id,name,email,code,payout_preference,payout_identifier,created_at,clicks,signups\n"
     lines = [header]
+
     for r in rows:
         def esc(v):
             v = "" if v is None else str(v)
@@ -339,6 +341,7 @@ def admin_ambassadors_csv():
         ]) + "\n")
 
     return Response("".join(lines), mimetype="text/csv")
+
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
