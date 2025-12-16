@@ -2,7 +2,7 @@
 {% block content %}
 
 {% if not ambassador %}
-  <!-- Cas : ref inconnu -->
+  <!-- Cas : ref / code inconnu -->
   <section style="
         margin-top:12px;
         padding:40px 20px 42px;
@@ -14,7 +14,7 @@
     <h1 style="font-size:1.6rem;margin-bottom:10px;">Dashboard introuvable</h1>
     <p style="font-size:14px;color:var(--muted);max-width:520px;margin:0 auto 18px;">
       Nous n’avons pas réussi à retrouver votre compte ambassadeur.
-      Vérifiez que vous utilisez le lien reçu après votre inscription.
+      Vérifiez que vous utilisez bien le lien reçu après votre inscription.
       En cas de doute, réinscrivez-vous avec la même adresse email : votre code sera récupéré automatiquement.
     </p>
     <a href="{{ url_for('inscription') }}"
@@ -24,6 +24,7 @@
       Revenir à la page d’inscription
     </a>
   </section>
+
 {% else %}
 
 <section style="display:flex;flex-wrap:wrap;gap:22px;margin-top:6px;">
@@ -42,7 +43,7 @@
       Bonjour {{ ambassador.name or ambassador.email }},
     </h1>
     <p style="font-size:14px;color:var(--muted);margin-bottom:16px;">
-      voici un aperçu de vos performances avec le programme ambassadeur Betty Bot.
+      voici un aperçu de vos performances avec le programme ambassadeurs Betty Bot.
     </p>
 
     <!-- Stats -->
@@ -101,7 +102,7 @@
         ">
       <div style="font-weight:600;margin-bottom:6px;">Votre lien Betty Bot à partager</div>
       <p style="margin-bottom:6px;color:var(--muted);">
-        Tous les abonnements pris via ce lien seront automatiquement associés à votre compte ambassadeur.
+        Tous les abonnements pris via ce lien sont automatiquement associés à votre compte ambassadeur.
       </p>
       <p style="word-break:break-all;margin-bottom:6px;">
         <a href="{{ betty_link }}" target="_blank" rel="noopener"
@@ -110,7 +111,7 @@
         </a>
       </p>
       <p style="font-size:11px;color:var(--muted);">
-        Vous pouvez l’utiliser dans vos emails, messages privés, publications réseaux sociaux, etc.
+        Utilisez-le dans vos emails, messages privés, publications réseaux sociaux, etc.
       </p>
     </div>
 
@@ -118,7 +119,29 @@
     <div style="margin-top:14px;font-size:12px;color:var(--muted);">
       Rappel : vous touchez <strong>30&nbsp;% de la première mensualité</strong> (≈24&nbsp;€)
       puis <strong>10&nbsp;€ / mois</strong> tant que chaque abonnement reste actif.
-      Les versements sont effectués selon le mode indiqué lors de votre inscription.
+      Les versements sont effectués sur le mode de paiement indiqué lors de votre inscription.
+    </div>
+
+    <!-- Bouton Demander mon virement -->
+    <div style="margin-top:18px;">
+      <a
+        href="mailto:spectramediabots@gmail.com?subject=Demande%20de%20virement%20Ambassadeur%20Betty%20Bot&body=Bonjour%2C%0A%0AJe%20souhaite%20demander%20le%20virement%20de%20mes%20commissions%20d%27ambassadeur.%0A%0ANom%20:%20{{ (ambassador.name or '')|urlencode }}%0AEmail%20:%20{{ ambassador.email|urlencode }}%0ACode%20ambassadeur%20:%20{{ ambassador.code|urlencode }}%0AMontant%20estim%C3%A9%20:%20{{ '%.2f'|format(total_commission or 0) }}%20%E2%82%AC%0A%0AMerci%20!%0A"
+        style="
+          display:inline-block;
+          padding:11px 22px;
+          border-radius:999px;
+          background:linear-gradient(90deg,#22c55e,#3b82f6);
+          color:#0f172a;
+          font-weight:600;
+          font-size:14px;
+          text-decoration:none;
+          box-shadow:0 10px 30px rgba(34,197,94,0.4);
+        ">
+        💸 Demander mon virement
+      </a>
+      <p style="font-size:11px;color:var(--muted);margin-top:6px;max-width:360px;">
+        Le montant indiqué est une estimation. Le versement réel sera calculé à partir des abonnements effectivement payés via votre lien.
+      </p>
     </div>
   </div>
 
@@ -131,7 +154,7 @@
         background:radial-gradient(circle at top right,rgba(99,102,241,0.25),#020617 55%);
         padding:22px 20px 22px;
       ">
-    <!-- Onglets "contenu" très simple -->
+    <!-- En-tête outils -->
     <div style="margin-bottom:14px;">
       <div style="font-size:13px;color:var(--muted);margin-bottom:4px;">
         Outils pour vendre Betty Bot
@@ -153,7 +176,7 @@
               font-size:11px;
               background:rgba(15,23,42,0.6);
             ">
-          Comment ça se passe pour le client
+          Parcours client
         </div>
       </div>
     </div>
@@ -169,7 +192,7 @@
         ">
       <h2 style="font-size:1rem;margin-bottom:6px;">Scripts pour convaincre vos clients</h2>
       <p style="color:var(--muted);margin-bottom:8px;">
-        Voici deux scripts prêts à l’emploi que vous pouvez adapter à votre ton.
+        Deux scripts prêts à l’emploi que vous pouvez adapter à votre ton.
       </p>
 
       <details open style="margin-bottom:8px;">
@@ -255,7 +278,7 @@ comment Betty peut travailler pour vous en arrière-plan.
         <li>
           <strong>Réception du script par email</strong><br>
           Il reçoit automatiquement un email avec son <strong>script d’intégration</strong>
-          (quelques lignes de code à copier-coller) et un récap de son bot.  
+          (quelques lignes de code à copier-coller).  
           Il doit vérifier ses spams si l’email n’apparaît pas.
         </li>
         <li>
@@ -269,7 +292,7 @@ comment Betty peut travailler pour vous en arrière-plan.
           <strong>Betty commence à travailler</strong><br>
           Une fois le script en place, Betty apparaît sur le site et commence à discuter
           avec les visiteurs. Les leads sont envoyés par email (et/ou dans l’outil que
-          vous avez prévu par la suite).
+          vous prévoyez ensuite).
         </li>
       </ol>
       <p style="font-size:12px;color:var(--muted);margin-top:8px;">
@@ -281,5 +304,22 @@ comment Betty peut travailler pour vous en arrière-plan.
 </section>
 
 {% endif %}
+
+<!-- Bouton contact global -->
+<div style="margin-top:30px;text-align:center;">
+  <a href="mailto:spectramediabots@gmail.com"
+     style="
+       display:inline-block;
+       padding:10px 20px;
+       border-radius:999px;
+       border:1px solid rgba(148,163,184,0.7);
+       background:#020617;
+       color:#e5e7eb;
+       font-size:13px;
+       text-decoration:none;
+     ">
+    ✉️ Contact – spectramediabots@gmail.com
+  </a>
+</div>
 
 {% endblock %}
