@@ -66,7 +66,7 @@
       style="
         padding:8px 14px;
         border-radius:999px;
-        border:1px solid rgba(148,163,184,0.8);
+        border:1px solid rgba(148,163,184,0.9);
         background:rgba(15,23,42,0.95);
         color:#e5e7eb;
         cursor:pointer;
@@ -84,7 +84,7 @@
         color:#9ca3af;
         cursor:pointer;
       ">
-      🗣️ Scripts pour convaincre vos clients
+      🗣️ Scripts & explications pour vos clients
     </button>
   </nav>
 
@@ -210,18 +210,74 @@
 
   </section>
 
-  <!-- CONTENU : SCRIPTS COMMERCIAUX -->
+  <!-- CONTENU : SCRIPTS & EXPLICATIONS -->
   <section id="tab-scripts" class="tab-section" style="display:none;margin-top:8px;">
 
     <h2 style="font-size:1.1rem;margin:0 0 8px;">
-      🗣️ Scripts pour convaincre vos clients
+      🗣️ Scripts & explications pour vos clients
     </h2>
     <p style="margin:0 0 14px;font-size:0.9rem;opacity:.85;">
-      Voici deux scripts que vous pouvez adapter pour vos appels, vos emails ou vos messages.
-      Le but est de rester simple, humain et concret.
+      Utilisez cette page comme boîte à outils&nbsp;: explication simple du parcours client + scripts prêts à copier-coller.
     </p>
 
-    <!-- Script 1 : Appel téléphonique -->
+    <!-- EXPLICATION POUR LE CLIENT : PARCOURS -->
+    <div style="
+      margin-bottom:18px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,0.7);
+      background:rgba(15,23,42,0.96);
+      font-size:0.9rem;
+    ">
+      <div style="font-weight:600;margin-bottom:6px;">
+        👣 Comment ça se passe concrètement pour votre client ?
+      </div>
+      <ol style="margin:0 0 6px 18px;padding:0;">
+        <li style="margin-bottom:6px;">
+          <strong>1. Inscription à l’abonnement Betty</strong><br>
+          Votre client clique sur votre lien, arrive sur la page Betty, choisit son pack
+          (ex&nbsp;: avocat, coach, artisan…) et s’abonne via Stripe (79,90&nbsp;€ / mois).
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>2. Configuration de son chatbot</strong><br>
+          Après l’abonnement, il accède à la page de configuration&nbsp;:
+          couleur du bot, avatar, message d’accueil, email de réception des leads, etc.
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>3. Réception du script d’intégration par email</strong><br>
+          Betty lui envoie un email avec le <strong>code du chatbot</strong>
+          (un petit script JavaScript très court).  
+          <em>Important&nbsp;:</em> il doit vérifier ses spams / courrier indésirable
+          si l’email n’apparaît pas dans sa boîte de réception.
+        </li>
+        <li style="margin-bottom:6px;">
+          <strong>4. Intégration du bot sur son site / sa page</strong><br>
+          Le script tient en général sur <strong>2 lignes</strong>.  
+          Il a plusieurs options&nbsp;:
+          <ul style="margin:4px 0 0 18px;padding:0;">
+            <li>Le coller lui-même dans le code HTML de son site (juste avant <code>&lt;/body&gt;</code>).</li>
+            <li>L’envoyer à son <strong>développeur / personne technique</strong> qui le mettra en place.</li>
+            <li>Sur certains constructeurs (WordPress, Wix, etc.)&nbsp;:
+              utiliser l’option <strong>“ajouter un widget / code HTML personnalisé”</strong>
+              et coller le script dedans.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <strong>5. Betty commence à travailler</strong><br>
+          Dès que le script est en place, le chat apparaît sur son site.
+          Betty accueille les visiteurs, pose les bonnes questions et
+          envoie les leads par email.
+        </li>
+      </ol>
+      <p style="margin:6px 0 0;font-size:0.8rem;opacity:.75;">
+        Vous pouvez simplement expliquer ça à vos clients en disant&nbsp;:
+        <em>“Vous vous abonnez, vous configurez votre bot, vous recevez le code par mail
+        et votre développeur (ou vous-même) le colle sur le site. Après ça, Betty travaille seule.”</em>
+      </p>
+    </div>
+
+    <!-- Script 1 : Appel téléphonique (artisans / coachs) -->
     <div style="
       margin-bottom:16px;
       padding:12px 14px;
@@ -231,11 +287,11 @@
       font-size:0.9rem;
     ">
       <div style="font-weight:600;margin-bottom:6px;">
-        ☎️ Script d’appel téléphonique
+        ☎️ Script d’appel téléphonique (artisans / coachs)
       </div>
       <textarea readonly style="
         width:100%;
-        min-height:150px;
+        min-height:170px;
         border-radius:10px;
         border:1px solid rgba(55,65,81,0.9);
         background:#020617;
@@ -243,23 +299,24 @@
         font-size:0.86rem;
         padding:10px;
         resize:vertical;
-      ">{% raw %}Bonjour, je vous appelle parce que je me suis dit que Betty pouvait vraiment vous faire gagner du temps.
+      ">Bonjour, je vous appelle parce que je pense que votre activité d’artisan / coach pourrait vraiment profiter d’une assistante IA comme Betty.
 
-Aujourd’hui, quand un visiteur arrive sur votre site en dehors de vos horaires, il fait quoi ?
-La plupart du temps, soit il part, soit il va voir un concurrent.
+Aujourd’hui, quand quelqu’un arrive sur votre site ou vous écrit en dehors de vos horaires, il se passe quoi ?
+Souvent : la personne attend, oublie… ou va chez un concurrent.
 
-Betty, c’est une assistante IA spécialisée dans votre métier. Elle discute avec les visiteurs comme une vraie personne,
-elle pose les bonnes questions (nom, email, téléphone, besoin) et vous envoie un récap clair par email.
-Comme ça, vous rappelez uniquement les vrais prospects, au bon moment.
+Betty, c’est une assistante IA spécialisée pour les petites structures : artisans, coachs, thérapeutes, indépendants.
+Elle discute avec vos visiteurs comme une vraie personne, elle pose les bonnes questions (nom, email, téléphone, besoin),
+et vous envoie un récap clair par email.
 
-L’abonnement est à 79,90 € / mois, sans engagement. 
-Franchement, si Betty vous évite de perdre 1 ou 2 clients par mois, elle est rentabilisée.
+Résultat : vous rappelez uniquement les vrais prospects, au bon moment, au lieu de passer votre temps à trier des messages.
 
-Je peux vous envoyer le lien pour que vous voyiez la démo et les infos ?
-Vous pourrez activer ou non votre abonnement après avoir vu comment elle travaille chez vous.{% endraw %}</textarea>
+L’abonnement est à 79,90 € / mois, sans engagement.
+Si Betty vous aide à récupérer ne serait-ce qu’1 ou 2 nouveaux clients par mois, elle s’auto-finance largement.
+
+Je peux vous envoyer le lien de présentation et la démo pour que vous voyiez comment ça fonctionne ?</textarea>
     </div>
 
-    <!-- Script 2 : Message écrit (email / WhatsApp) -->
+    <!-- Script 2 : Message écrit (email / WhatsApp) artisans / coachs -->
     <div style="
       margin-bottom:16px;
       padding:12px 14px;
@@ -273,7 +330,7 @@ Vous pourrez activer ou non votre abonnement après avoir vu comment elle travai
       </div>
       <textarea readonly style="
         width:100%;
-        min-height:180px;
+        min-height:190px;
         border-radius:10px;
         border:1px solid rgba(55,65,81,0.9);
         background:#020617;
@@ -281,30 +338,31 @@ Vous pourrez activer ou non votre abonnement après avoir vu comment elle travai
         font-size:0.86rem;
         padding:10px;
         resize:vertical;
-      ">{% raw %}Bonjour,
+      ">Bonjour,
 
-Je me permets de vous écrire car je pense que votre activité pourrait vraiment profiter d’une assistante IA comme Betty.
+Je me permets de vous écrire car je pense que votre activité d’artisan / coach pourrait vraiment bénéficier d’une assistante IA comme Betty.
 
-Betty, c’est un petit chat sur votre site qui discute avec vos visiteurs quand vous n’êtes pas disponible :
+Betty, c’est un petit chat sur votre site ou votre page qui discute avec vos prospects quand vous n’êtes pas disponible :
 – elle accueille les personnes,
 – pose les bonnes questions (nom, coordonnées, besoin),
 – et vous envoie un récap clair par email.
 
-Concrètement : au lieu de perdre des contacts en dehors de vos horaires, Betty les récupère et vous les met de côté.
+Concrètement : au lieu de perdre des contacts en soirée, le week-end ou pendant vos séances, Betty les récupère et vous les met de côté.
 Vous n’avez plus qu’à les rappeler quand vous êtes disponible.
 
 L’abonnement est à 79,90 € / mois, sans engagement.
-Si Betty vous aide à transformer ne serait-ce qu’1 ou 2 nouveaux clients par mois, elle s’auto-finance largement.
+Si Betty vous aide à transformer 1 ou 2 clients de plus par mois, elle est largement rentabilisée.
 
 Vous pouvez découvrir la présentation ici :
 {{ share_link }}
 
-Si vous voulez, je peux aussi vous expliquer en 5 minutes comment ça se passe dans votre cas précis.{% endraw %}</textarea>
+Si vous le souhaitez, je peux aussi vous expliquer en 5 minutes comment ça s’appliquerait à votre cas précis (artisan, coach, thérapeute…).</textarea>
     </div>
 
     <p style="margin:0;font-size:0.82rem;opacity:.75;">
-      N’hésitez pas à adapter ces scripts avec vos propres mots. L’important est de rester simple&nbsp;:
-      <em>“Betty répond quand vous ne pouvez pas, elle garde les prospects au chaud et vous envoie des vrais clients à rappeler.”</em>
+      N’hésitez pas à adapter ces scripts avec vos mots. L’important reste simple&nbsp;:
+      <em>“Betty répond quand vous ne pouvez pas, elle garde les prospects au chaud
+      et vous envoie des vrais clients à rappeler.”</em>
     </p>
   </section>
 </div>
@@ -320,16 +378,20 @@ Si vous voulez, je peux aussi vous expliquer en 5 minutes comment ça se passe d
     tabs.forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.getAttribute('data-tab');
+
         Object.keys(sections).forEach(key => {
           sections[key].style.display = (key === target) ? 'block' : 'none';
         });
+
         tabs.forEach(b => {
           if (b === btn) {
             b.style.borderColor = 'rgba(148,163,184,0.9)';
             b.style.color = '#e5e7eb';
+            b.style.background = 'rgba(15,23,42,0.95)';
           } else {
             b.style.borderColor = 'transparent';
             b.style.color = '#9ca3af';
+            b.style.background = 'rgba(15,23,42,0.7)';
           }
         });
       });
