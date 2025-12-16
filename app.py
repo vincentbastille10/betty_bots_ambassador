@@ -82,10 +82,13 @@ def inscription():
         email = (request.form.get("email") or "").strip().lower()
         payout_preference = (request.form.get("payout_preference") or "").strip()
         payout_identifier = (request.form.get("payout_identifier") or "").strip()
-        accept_terms = request.form.get("accept_terms")
 
-        if not name or not email or not payout_preference or not payout_identifier or not accept_terms:
-            error = "Merci de remplir tous les champs obligatoires et d’accepter les conditions."
+        # Pas de case à cocher dans le template, donc on ne teste que ces champs
+        if not name or not email or not payout_preference or not payout_identifier:
+            error = (
+                "Merci de remplir tous les champs obligatoires "
+                "pour rejoindre le programme ambassadeur."
+            )
         else:
             conn = get_db()
             # Si l'email existe déjà, on réutilise le même compte
@@ -100,7 +103,10 @@ def inscription():
                 now = datetime.datetime.utcnow().isoformat()
                 conn.execute(
                     """
-                    INSERT INTO ambassadors (name, email, code, payout_preference, payout_identifier, created_at)
+                    INSERT INTO ambassadors (
+                        name, email, code, payout_preference,
+                        payout_identifier, created_at
+                    )
                     VALUES (?, ?, ?, ?, ?, ?)
                     """,
                     (name, email, code, payout_preference, payout_identifier, now),
@@ -109,7 +115,7 @@ def inscription():
 
             conn.close()
 
-            # 🔁 Redirection directe vers le dashboard, avec le code dans l’URL
+            # 🔁 Après inscription, on envoie l’ambassadeur sur son dashboard
             return redirect(url_for("dashboard", code=code))
 
     return render_template("inscription.html", error=error)
@@ -117,7 +123,8 @@ def inscription():
 
 @app.route("/dashboard")
 def dashboard():
-    code = (request.args.get("code") or "").strip()
+    # Compatibilité : accepte ?code=... ou ?ref=...
+    code = (request.args.get("code") or request.args.get("ref") or "").strip()
     email = (request.args.get("email") or "").strip().lower()
 
     conn = get_db()
@@ -134,7 +141,7 @@ def dashboard():
 
     if not ambassador:
         conn.close()
-        # Dashboard "vide" avec message doux
+        # Dashboard "vide" avec message doux (templates/dashboard.html gère le cas ambassador=None)
         return render_template(
             "dashboard.html",
             ambassador=None,
@@ -142,20 +149,22 @@ def dashboard():
             not_found=True,
         )
 
-    # Statistiques de base
+    # Statistiques de base depuis la BDD
     clicks = ambassador["clicks"]
     signups = ambassador["signups"]
 
-    # Hypothèses pour l’estimation
+    # Hypothèses pour l’estimation (cohérent avec ce qu’on affiche dans les pages)
     price = 79.90
-    upfront_per = 0.30 * price  # 30 % de 79,90 €
-    recurring_per_month = 10.0   # 10 € / mois / abonnement
+    upfront_per = 0.30 * price      # 30 % de 79,90 €
+    recurring_per_month = 10.0      # 10 € / mois / abonnement
 
     est_upfront_total = signups * upfront_per
     est_monthly_recurring = signups * recurring_per_month
     est_6m_total = signups * (upfront_per + recurring_per_month * 6)
 
+    # Lien vers la page Betty avec ?ref=CODE (à partager aux clients)
     tracking_link = f"https://www.spectramedia.online/?ref={ambassador['code']}"
+    # Lien court optionnel (si tu veux l’afficher quelque part plus tard)
     short_link = url_for("redirect_with_ref", code=ambassador["code"], _external=True)
 
     stats = {
@@ -171,9 +180,19 @@ def dashboard():
 
     conn.close()
 
+    # Les variables utilisées par dashboard.html :
+    #  - ambassador
+    #  - betty_link : lien à partager (vers spectramedia.online/?ref=CODE)
+    #  - total_sales : nombre d’abonnements générés
+    #  - total_clicks : nombre de clics sur le lien
+    #  - total_commission : estimation globale sur 6 mois (pour affichage simple)
     return render_template(
         "dashboard.html",
         ambassador=ambassador,
+        betty_link=tracking_link,
+        total_sales=signups,
+        total_clicks=clicks,
+        total_commission=est_6m_total,
         stats=stats,
         not_found=False,
     )
@@ -198,6 +217,7 @@ def redirect_with_ref(code):
         conn.commit()
         ref_code = ambassador["code"]
     else:
+        # Si le code n’existe pas en BDD, on redirige quand même avec ce code brut
         ref_code = code
 
     conn.close()
