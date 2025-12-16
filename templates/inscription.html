@@ -1,389 +1,314 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Devenir Ambassadeur Betty Bot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #020617;
-      --card: #020617;
-      --card-inner: #020617;
-      --accent: #3b82f6;
-      --accent-soft: rgba(59,130,246,0.18);
-      --accent-pink: #ec4899;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border: rgba(148,163,184,0.4);
-      --radius: 18px;
-      --shadow: 0 25px 80px rgba(15,23,42,0.9);
-    }
+{% extends "base.html" %}
+{% block content %}
 
-    * {
-      box-sizing: border-box;
-    }
+<div style="max-width:960px;margin:32px auto;padding:0 1.5rem;color:#e5e7eb;">
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(59,130,246,0.4), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(236,72,153,0.35), transparent 60%),
-        #020617;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 32px 16px;
-    }
+  <!-- HERO / TITRE -->
+  <header style="text-align:left;margin-bottom:24px;">
+    <h1 style="
+      font-size:clamp(2rem,3vw,2.6rem);
+      margin:0 0 8px;
+      letter-spacing:-0.03em;
+    ">
+      Devenez ambassadeur <span style="color:#38bdf8;">Betty&nbsp;Bot</span>
+    </h1>
+    <p style="margin:0;font-size:0.98rem;opacity:.9;max-width:640px;">
+      Recommandez Betty à votre réseau (avocats, médecins, artisans, thérapeutes, agences…)
+      et touchez des commissions récurrentes sur chaque abonnement actif.
+    </p>
+  </header>
 
-    .shell {
-      max-width: 980px;
-      width: 100%;
-      background: radial-gradient(circle at top, rgba(148,163,184,0.15), transparent 65%);
-      border-radius: 26px;
-      padding: 2px;
-      box-shadow: var(--shadow);
-    }
+  <!-- CADRE COMMISSIONS + EXEMPLES -->
+  <section style="
+    margin-bottom:26px;
+    padding:18px 20px;
+    border-radius:18px;
+    border:1px solid rgba(148,163,184,0.7);
+    background:radial-gradient(circle at top left,#0ea5e944,#6366f144 40%,#020617 92%);
+  ">
+    <h2 style="margin:0 0 10px;font-size:1.15rem;">
+      💸 Comment vous êtes rémunéré&nbsp;?
+    </h2>
 
-    .card {
-      background: radial-gradient(circle at top left,#0f172a,#020617 60%);
-      border-radius: 24px;
-      padding: 28px 24px;
-      border: 1px solid rgba(148,163,184,0.5);
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 26px;
-    }
+    <p style="margin:0 0 10px;font-size:0.96rem;opacity:.9;">
+      Pour chaque <strong>abonnement Betty à 79,90&nbsp;€ / mois</strong) vendu grâce à votre lien ambassadeur&nbsp;:
+    </p>
 
-    @media (max-width: 820px) {
-      .card {
-        grid-template-columns: minmax(0,1fr);
-      }
-    }
+    <ul style="margin:0 0 14px 18px;padding:0;font-size:0.95rem;">
+      <li>
+        <strong>30&nbsp;% sur les 79,90&nbsp;€ de première inscription</strong>
+        &nbsp;→ soit <strong>23,97&nbsp;€</strong> versés une fois, dès la vente.
+      </li>
+      <li>
+        <strong>10&nbsp;€ par mois</strong> tant que le client reste abonné.
+      </li>
+    </ul>
 
-    h1 {
-      margin: 0 0 10px;
-      font-size: clamp(1.9rem, 3vw, 2.3rem);
-      letter-spacing: -0.03em;
-    }
-
-    h1 span {
-      background: linear-gradient(135deg, #3b82f6, #ec4899);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    p {
-      margin: 0;
-    }
-
-    .lead {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-bottom: 14px;
-      max-width: 520px;
-    }
-
-    .badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
-    }
-
-    .badge {
-      font-size: 0.72rem;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.5);
-      background: rgba(15,23,42,0.9);
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-    }
-
-    .points {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 18px;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .points li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .points li span:first-child {
-      color: #22c55e;
-      font-size: 0.9rem;
-      margin-top: 1px;
-    }
-
-    .highlight {
-      font-size: 0.85rem;
-      color: var(--muted);
-      border-radius: 999px;
-      border: 1px dashed rgba(148,163,184,0.6);
-      padding: 7px 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 8px;
-    }
-
-    .highlight strong {
-      color: #fbbf24;
-    }
-
-    .form-card {
-      background: radial-gradient(circle at top,rgba(15,23,42,0.9),#020617 60%);
-      border-radius: 18px;
-      border: 1px solid rgba(148,163,184,0.6);
-      padding: 18px 16px 20px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .form-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at top left, rgba(59,130,246,0.22), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(236,72,153,0.22), transparent 55%);
-      opacity: 0.85;
-      pointer-events: none;
-    }
-
-    .form-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .form-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    .form-sub {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    label {
-      display: block;
-      font-size: 0.8rem;
-      margin-bottom: 4px;
-      color: #cbd5f5;
-    }
-
-    input, select {
-      width: 100%;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: rgba(15,23,42,0.9);
-      color: var(--text);
-      padding: 9px 10px;
-      font-size: 0.85rem;
-      margin-bottom: 10px;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(59,130,246,0.6);
-    }
-
-    button {
-      appearance: none;
-      border: none;
-      border-radius: 999px;
-      padding: 10px 18px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(135deg,#3b82f6,#6366f1,#ec4899);
-      color: #f9fafb;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 15px 35px rgba(15,23,42,0.9);
-    }
-
-    button span.icon {
-      font-size: 1rem;
-    }
-
-    .note {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-top: 8px;
-    }
-
-    .flash {
-      margin-bottom: 10px;
-      font-size: 0.8rem;
-      padding: 7px 10px;
-      border-radius: 10px;
-    }
-
-    .flash.error {
-      background: rgba(248,113,113,0.1);
-      border: 1px solid rgba(248,113,113,0.8);
-      color: #fecaca;
-    }
-
-    .flash.success {
-      background: rgba(34,197,94,0.08);
-      border: 1px solid rgba(34,197,94,0.9);
-      color: #bbf7d0;
-    }
-
-    .link-block {
-      font-size: 0.85rem;
-      background: rgba(15,23,42,0.95);
-      border-radius: 12px;
-      border: 1px solid rgba(148,163,184,0.7);
-      padding: 10px 10px;
-      word-break: break-all;
-      margin: 8px 0 10px;
-    }
-
-    .mini {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-  </style>
-</head>
-<body>
-  <div class="shell">
-    <div class="card">
-      <!-- Texte / mission -->
-      <div>
-        <h1>Devenez <span>Ambassadeur&nbsp;Betty&nbsp;Bot</span></h1>
-        <p class="lead">
-          Betty Bot répond aux clients quand les pros sont occupés ou hors ligne.
-          Votre mission&nbsp;: parler de Betty à votre réseau (artisans, commerçants,
-          indépendants…), et toucher une commission sur chaque abonnement actif.
-        </p>
-
-        <div class="badges">
-          <div class="badge">Revenus récurrents</div>
-          <div class="badge">Aucune compétence technique</div>
-          <div class="badge">Travail 100% à distance</div>
-        </div>
-
-        <ul class="points">
-          <li>
-            <span>✅</span>
-            <span><strong>1 client pro</strong> peut vous rapporter des revenus chaque mois.</span>
-          </li>
-          <li>
-            <span>✅</span>
-            <span>Vous partagez simplement un lien Betty Bot personnalisé avec votre code.</span>
-          </li>
-          <li>
-            <span>✅</span>
-            <span>Les paiements sont envoyés sur votre compte (virement, PayPal ou autre).</span>
-          </li>
-        </ul>
-
-        <div class="highlight">
-          <span>💡</span>
-          <span>Promettez simplement ceci&nbsp;: <strong>Betty garde le prospect chez vous</strong> au lieu de le laisser partir chez un concurrent.</span>
-        </div>
-
-        <p class="mini">
-          L’abonnement est géré par Spectra Media AI. Vous n’avancez aucun frais&nbsp;:
-          vous êtes commissionné(e) sur les abonnements pris via votre lien.
-        </p>
+    <!-- Exemple 1 -->
+    <div style="
+      margin-top:4px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(15,23,42,0.9);
+      border:1px dashed rgba(148,163,184,0.9);
+      font-size:0.9rem;
+    ">
+      <div style="font-weight:600;margin-bottom:6px;">
+        Exemple 1&nbsp;: <strong>1 abonnement vendu par semaine</strong>
+        (on simplifie à 4 semaines par mois → 24 ventes en 6&nbsp;mois)
       </div>
-
-      <!-- Formulaire -->
-      <div class="form-card">
-        <div class="form-inner">
-
-          {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              {% for category, message in messages %}
-                <div class="flash {{ category }}">{{ message }}</div>
-              {% endfor %}
-            {% endif %}
-          {% endwith %}
-
-          {% if link %}
-            <div class="flash success">
-              ✅ Inscription validée. Gardez précieusement ce lien&nbsp;: il vous donne
-              accès à votre tableau de bord ambassadeur.
-            </div>
-
-            <div class="form-title">Lien vers votre tableau de bord</div>
-            <div class="link-block">{{ link }}</div>
-            <p class="mini">
-              Ajoutez cette page en favori. Depuis le dashboard, vous trouverez votre
-              <strong>lien Betty Bot à partager</strong> et le suivi de vos commissions.
-            </p>
-
-            <p class="note">
-              👉 Vous pouvez commencer à parler de Betty Bot dès maintenant
-              à vos contacts (artisans, commerçants, thérapeutes, freelance, etc.).
-            </p>
-
-          {% else %}
-            <div class="form-title">Inscription Ambassadeur</div>
-            <p class="form-sub">
-              Remplissez ces quelques informations pour recevoir votre lien de suivi.
-            </p>
-
-            <form method="post">
-              <label for="name">Nom complet</label>
-              <input id="name" name="name" required placeholder="Ex. : Marie Dupont" />
-
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" required placeholder="votre.email@example.com" />
-
-              <label for="payout_method">Comment souhaitez-vous être payé(e)&nbsp;?</label>
-              <select id="payout_method" name="payout_method" required>
-                <option value="">Sélectionnez une option</option>
-                <option value="Virement bancaire">Virement bancaire (IBAN)</option>
-                <option value="PayPal">PayPal</option>
-                <option value="Autre">Autre (Stripe, Lydia, Revolut…)</option>
-              </select>
-
-              <label for="payout_details">
-                Détails pour le paiement
-              </label>
-              <input
-                id="payout_details"
-                name="payout_details"
-                required
-                placeholder="IBAN complet ou email PayPal / lien de paiement…"
-              />
-
-              <button type="submit">
-                <span class="icon">🚀</span>
-                <span>Créer mon lien ambassadeur</span>
-              </button>
-
-              <p class="note">
-                Vos informations ne sont utilisées que pour vous payer vos commissions.
-                Elles ne seront jamais revendues.
-              </p>
-            </form>
-          {% endif %}
-        </div>
+      <ul style="margin:0 0 4px 18px;padding:0;">
+        <li>Prime d’inscription&nbsp;: 23,97&nbsp;€ × 24 ≈ <strong>575&nbsp;€</strong></li>
+        <li>Revenus mensuels&nbsp;: 10&nbsp;€ × 6&nbsp;mois × 24 ventes = <strong>1&nbsp;440&nbsp;€</strong></li>
+      </ul>
+      <div>
+        👉 <strong>Total sur 6 mois ≈ 2&nbsp;015&nbsp;€</strong>
+        si tous les abonnements restent actifs.
       </div>
     </div>
-  </div>
-</body>
-</html>
+
+    <!-- Exemple 2 -->
+    <div style="
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(17,24,39,0.9);
+      border:1px dashed rgba(129,140,248,0.95);
+      font-size:0.9rem;
+    ">
+      <div style="font-weight:600;margin-bottom:6px;">
+        Exemple 2&nbsp;: <strong>5 abonnements vendus par semaine</strong>
+        (≈ 120 ventes en 6&nbsp;mois)
+      </div>
+      <ul style="margin:0 0 4px 18px;padding:0;">
+        <li>Prime d’inscription&nbsp;: 23,97&nbsp;€ × 120 ≈ <strong>2&nbsp;876&nbsp;€</strong></li>
+        <li>Revenus mensuels&nbsp;: 10&nbsp;€ × 6&nbsp;mois × 120 ventes = <strong>7&nbsp;200&nbsp;€</strong></li>
+      </ul>
+      <div>
+        👉 <strong>Total sur 6 mois ≈ 10&nbsp;076&nbsp;€</strong>
+        si tous les abonnements restent actifs.
+      </div>
+    </div>
+
+    <p style="margin:10px 0 0;font-size:0.82rem;opacity:.75;">
+      Ces montants sont donnés à titre indicatif, en supposant que tous les abonnements restent actifs pendant 6&nbsp;mois.
+    </p>
+  </section>
+
+  <!-- FORMULAIRE D'INSCRIPTION -->
+  <section style="
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px;
+    align-items:flex-start;
+  ">
+
+    <div style="
+      flex:1 1 320px;
+      max-width:480px;
+      border-radius:18px;
+      border:1px solid rgba(30,64,175,0.7);
+      background:rgba(15,23,42,0.96);
+      padding:18px 20px 20px;
+      box-shadow:0 18px 40px rgba(15,23,42,0.8);
+    ">
+      <h2 style="margin:0 0 12px;font-size:1.05rem;">
+        ✍️ Inscription ambassadeur
+      </h2>
+      <p style="margin:0 0 12px;font-size:0.9rem;opacity:.8;">
+        Remplissez ce formulaire, vous recevrez immédiatement votre
+        <strong>lien personnel</strong> et l’accès à votre <strong>dashboard</strong>.
+      </p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div style="margin-bottom:10px;">
+            {% for category, message in messages %}
+              <div style="
+                padding:8px 10px;
+                border-radius:10px;
+                font-size:0.86rem;
+                margin-bottom:6px;
+                {% if category == 'error' %}
+                  background:rgba(185,28,28,0.12);
+                  border:1px solid rgba(248,113,113,0.6);
+                  color:#fecaca;
+                {% else %}
+                  background:rgba(21,128,61,0.12);
+                  border:1px solid rgba(74,222,128,0.7);
+                  color:#bbf7d0;
+                {% endif %}
+              ">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="post" action="{{ url_for('inscription') }}" style="display:flex;flex-direction:column;gap:10px;">
+
+        <div>
+          <label for="name" style="font-size:0.88rem;display:block;margin-bottom:2px;">
+            Nom / Prénom
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(148,163,184,0.8);
+              background:#020617;
+              color:#e5e7eb;
+              font-size:0.92rem;
+            "
+          >
+        </div>
+
+        <div>
+          <label for="email" style="font-size:0.88rem;display:block;margin-bottom:2px;">
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(148,163,184,0.8);
+              background:#020617;
+              color:#e5e7eb;
+              font-size:0.92rem;
+            "
+          >
+        </div>
+
+        <div>
+          <label for="payout_method" style="font-size:0.88rem;display:block;margin-bottom:2px;">
+            Mode de versement préféré
+          </label>
+          <select
+            id="payout_method"
+            name="payout_method"
+            required
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(148,163,184,0.8);
+              background:#020617;
+              color:#e5e7eb;
+              font-size:0.9rem;
+            "
+          >
+            <option value="">Sélectionnez…</option>
+            <option value="iban">Virement bancaire (IBAN)</option>
+            <option value="paypal">Adresse PayPal</option>
+            <option value="stripe">Compte Stripe / lien de paiement</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="payout_details" style="font-size:0.88rem;display:block;margin-bottom:2px;">
+            Détails pour le versement
+          </label>
+          <textarea
+            id="payout_details"
+            name="payout_details"
+            rows="3"
+            required
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:10px;
+              border:1px solid rgba(148,163,184,0.8);
+              background:#020617;
+              color:#e5e7eb;
+              font-size:0.9rem;
+              resize:vertical;
+            "
+            placeholder="IBAN complet, ou adresse PayPal, ou identifiant Stripe…"
+          ></textarea>
+        </div>
+
+        <button type="submit"
+          style="
+            margin-top:6px;
+            padding:10px 16px;
+            border-radius:999px;
+            border:none;
+            background:linear-gradient(90deg,#0ea5e9,#6366f1,#ec4899);
+            color:#f9fafb;
+            font-weight:600;
+            font-size:0.98rem;
+            cursor:pointer;
+            box-shadow:0 14px 30px rgba(37,99,235,0.6);
+          ">
+          Créer mon compte ambassadeur
+        </button>
+
+        <p style="margin:6px 0 0;font-size:0.78rem;opacity:.7;">
+          En vous inscrivant, vous confirmez vouloir recevoir des informations sur vos ventes et paiements.
+        </p>
+      </form>
+    </div>
+
+    <!-- Panneau info / rappel lien -->
+    <div style="
+      flex:1 1 260px;
+      min-width:260px;
+      font-size:0.92rem;
+      opacity:.9;
+    ">
+      <h3 style="margin:0 0 8px;font-size:1rem;">
+        🎯 Votre mission en tant qu’ambassadeur
+      </h3>
+      <p style="margin:0 0 8px;">
+        • Partager votre <strong>lien personnel</strong> Betty Bot à votre réseau.<br>
+        • Utiliser les <strong>scripts fournis</strong> (téléphone, email, réseaux sociaux).<br>
+        • Aider les pros à comprendre que Betty <strong>répond quand ils ne peuvent pas</strong>
+        et <strong>transforme les visiteurs en clients à rappeler</strong>.
+      </p>
+      <p style="margin:0 0 8px;">
+        Vos commissions sont calculées automatiquement à partir des abonnements
+        passés via votre lien. Vous pouvez consulter vos ventes à tout moment dans
+        votre <strong>dashboard ambassadeur</strong>.
+      </p>
+
+      {% if link %}
+        <div style="
+          margin-top:14px;
+          padding:10px 12px;
+          border-radius:14px;
+          border:1px solid rgba(52,211,153,0.8);
+          background:rgba(6,95,70,0.3);
+          font-size:0.9rem;
+        ">
+          <div style="font-weight:600;margin-bottom:4px;">✅ Inscription réussie</div>
+          <p style="margin:0 0 6px;">
+            Voici le lien vers votre <strong>dashboard ambassadeur</strong>&nbsp;:
+          </p>
+          <p style="margin:0 0 8px;word-break:break-all;">
+            <a href="{{ link }}" style="color:#6ee7b7;text-decoration:underline;">
+              {{ link }}
+            </a>
+          </p>
+          <p style="margin:0;font-size:0.8rem;opacity:.9;">
+            Pensez à l’enregistrer (favoris) : c’est là que vous verrez vos ventes,
+            vos commissions et les scripts pour convaincre vos clients.
+          </p>
+        </div>
+      {% endif %}
+    </div>
+
+  </section>
+</div>
+
+{% endblock %}
