@@ -3,253 +3,360 @@
 
 {% block content %}
 
-<div style="max-width: 760px; margin: 0 auto; padding: 24px 16px;">
+<div style="
+  max-width: 1120px;
+  margin: 32px auto 40px;
+  padding: 0 16px;
+">
 
-  <h1 style="font-size: 2rem; margin-bottom: 12px;">
-    Devenez ambassadeur <span style="color:#4F46E5;">Betty Bot</span>
-  </h1>
-
-  <p style="font-size:14px; opacity:.9; margin-bottom:16px;">
-    Recommandez une assistante IA qui travaille <strong>24h/24</strong> pour les artisans,
-    cabinets et petites entreprises — et touchez une commission sur chaque abonnement.
-  </p>
-
+  <!-- CARTE PRINCIPALE -->
   <div style="
-      border-radius: 14px;
-      border: 1px solid rgba(148,163,184,0.5);
-      padding: 16px 18px;
-      margin-bottom: 20px;
-      background: radial-gradient(circle at top left,#1d4ed811,#4f46e511);
-      font-size: 14px;
-    ">
-    <h2 style="font-size:1.1rem; margin-top:0; margin-bottom:8px;">
-      💸 Rémunération : simple et transparente
-    </h2>
-    <ul style="margin: 0 0 8px 18px; padding:0;">
-      <li>30&nbsp;% de <strong>79,90&nbsp;€</strong> à chaque nouvelle inscription (≈ 24&nbsp;€ par abonnement).</li>
-      <li>+ <strong>10&nbsp;€ / mois</strong> tant que l’abonnement reste actif.</li>
-    </ul>
-    <p style="margin:0 0 4px;">
-      Vous êtes payé en tant que prescripteur : Betty Bot est une solution d’abonnement,
-      vous touchez votre part sur la durée.
-    </p>
-  </div>
-
-  <div style="
-      border-radius: 14px;
-      border: 1px solid rgba(148,163,184,0.5);
-      padding: 16px 18px;
-      margin-bottom: 24px;
-      background: #020617;
+      background: radial-gradient(circle at top left,#1d4ed8aa,#4f46e5aa),
+                  radial-gradient(circle at bottom right,#ec489966,#0f172acc);
+      border-radius: 28px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 28px 26px 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 26px;
+      box-shadow: 0 28px 80px rgba(15,23,42,0.85);
       color: #e5e7eb;
-      font-size: 14px;
     ">
-    <h2 style="font-size:1.05rem; margin-top:0; margin-bottom:8px;">
-      📈 Exemples de revenus potentiels (sur 6 mois)
+
+    <!-- COLONNE GAUCHE : PITCH -->
+    <div style="
+        flex: 1 1 380px;
+        min-width: 280px;
+      ">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+        <div style="
+            width:42px;
+            height:42px;
+            border-radius:999px;
+            background:radial-gradient(circle at 30% 20%,#f9fafb,#0f172a);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            font-weight:700;
+            font-size:20px;
+            color:#f9fafb;
+            border:2px solid rgba(248,250,252,0.5);
+          ">
+          B
+        </div>
+        <div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;opacity:.9;">
+          Programme Ambassadeurs · Spectra Media AI
+        </div>
+      </div>
+
+      <h1 style="
+            font-size: clamp(2.1rem,3.3vw,2.6rem);
+            line-height:1.05;
+            margin:0 0 10px;
+          ">
+        Devenez <span style="color:#38bdf8;">Ambassadeur</span><br>
+        <span style="color:#f9a8d4;">Betty Bot</span>
+      </h1>
+
+      <p style="font-size:15px;opacity:.92;margin:0 0 14px;max-width:460px;">
+        Betty Bot répond aux clients quand les pros sont occupés ou hors ligne.
+        Votre rôle : parler de Betty à votre réseau (artisans, commerçants, coachs,
+        avocats, thérapeutes…), et toucher une commission sur chaque abonnement actif.
+      </p>
+
+      <!-- TAGS -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;font-size:11px;">
+        <span style="
+              padding:6px 12px;
+              border-radius:999px;
+              border:1px solid rgba(148,163,184,0.7);
+              background:rgba(15,23,42,0.45);
+            ">
+          Revenus récurrents
+        </span>
+        <span style="
+              padding:6px 12px;
+              border-radius:999px;
+              border:1px solid rgba(148,163,184,0.7);
+              background:rgba(15,23,42,0.45);
+            ">
+          Aucune compétence technique
+        </span>
+        <span style="
+              padding:6px 12px;
+              border-radius:999px;
+              border:1px solid rgba(148,163,184,0.7);
+              background:rgba(15,23,42,0.45);
+            ">
+          Travail 100&nbsp;% à distance
+        </span>
+      </div>
+
+      <!-- CHECKLIST -->
+      <ul style="list-style:none;padding:0;margin:0 0 14px;font-size:14px;">
+        <li style="margin-bottom:5px;">
+          ✅ <strong>1 client pro</strong> peut vous rapporter des revenus chaque mois.
+        </li>
+        <li style="margin-bottom:5px;">
+          ✅ Vous partagez simplement un lien Betty Bot personnalisé avec votre code.
+        </li>
+        <li style="margin-bottom:5px;">
+          ✅ Les paiements sont envoyés sur votre compte (virement, PayPal ou autre).
+        </li>
+      </ul>
+
+      <div style="
+          margin-top:8px;
+          padding:10px 12px;
+          border-radius:999px;
+          border:1px dashed rgba(248,250,252,0.4);
+          background:rgba(15,23,42,0.55);
+          font-size:13px;
+          max-width:520px;
+        ">
+        💡 Promettez simplement ceci :
+        <strong>« Betty garde le prospect chez vous plutôt que de le laisser partir chez un concurrent. »</strong>
+      </div>
+    </div>
+
+    <!-- COLONNE DROITE : FORMULAIRE -->
+    <div style="
+        flex: 0 0 360px;
+        min-width: 280px;
+        background: rgba(15,23,42,0.96);
+        border-radius: 20px;
+        padding: 18px 18px 20px;
+        border:1px solid rgba(148,163,184,0.7);
+        box-shadow:0 18px 40px rgba(15,23,42,0.9);
+      ">
+
+      <h2 style="font-size:1.1rem;margin:0 0 4px;">
+        Inscription Ambassadeur
+      </h2>
+      <p style="font-size:12px;opacity:.8;margin:0 0 12px;">
+        Remplissez ces quelques informations pour recevoir votre lien personnel et
+        l’accès à votre dashboard de suivi.
+      </p>
+
+      <!-- Bloc rémunération court -->
+      <div style="
+          font-size:12px;
+          margin-bottom:12px;
+          padding:8px 9px;
+          border-radius:10px;
+          background:linear-gradient(90deg,#22c55e33,#0ea5e933);
+          border:1px solid rgba(52,211,153,0.7);
+        ">
+        <strong>Rémunération :</strong>
+        30&nbsp;% de <strong>79,90&nbsp;€</strong> à chaque abonnement souscrit
+        (≈ 24&nbsp;€ par client) + <strong>10&nbsp;€ / mois</strong> tant que l’abonnement reste actif.
+      </div>
+
+      {% if error %}
+        <div style="
+            background:#7f1d1d;
+            color:#fee2e2;
+            border-radius: 8px;
+            padding: 8px 10px;
+            font-size:12px;
+            margin-bottom:10px;
+          ">
+          {{ error }}
+        </div>
+      {% endif %}
+
+      <form method="post" action="{{ url_for('inscription') }}" style="font-size:13px;">
+
+        <!-- Nom -->
+        <div style="margin-bottom:10px;">
+          <label for="name" style="display:block;font-weight:600;margin-bottom:4px;">
+            Nom complet *
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            value="{{ request.form.name or '' }}"
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:9px;
+              border:1px solid #334155;
+              background:#020617;
+              color:#e5e7eb;
+              font-size:13px;
+            ">
+        </div>
+
+        <!-- Email -->
+        <div style="margin-bottom:10px;">
+          <label for="email" style="display:block;font-weight:600;margin-bottom:4px;">
+            Email *
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            value="{{ request.form.email or '' }}"
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:9px;
+              border:1px solid #334155;
+              background:#020617;
+              color:#e5e7eb;
+              font-size:13px;
+            ">
+          <p style="font-size:11px;opacity:.75;margin:3px 0 0;">
+            Utilisé pour vous retrouver si vous perdez votre lien.
+          </p>
+        </div>
+
+        <!-- Mode de paiement -->
+        <div style="margin-bottom:10px;">
+          <label for="payout_preference" style="display:block;font-weight:600;margin-bottom:4px;">
+            Comment souhaitez-vous être payé(e) ? *
+          </label>
+          <select
+            id="payout_preference"
+            name="payout_preference"
+            required
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:9px;
+              border:1px solid #334155;
+              background:#020617;
+              color:#e5e7eb;
+              font-size:13px;
+            ">
+            <option value="">Sélectionnez…</option>
+            <option value="virement" {% if request.form.payout_preference == 'virement' %}selected{% endif %}>
+              Virement bancaire (IBAN)
+            </option>
+            <option value="paypal" {% if request.form.payout_preference == 'paypal' %}selected{% endif %}>
+              Compte PayPal (email de connexion)
+            </option>
+            <option value="stripe" {% if request.form.payout_preference == 'stripe' %}selected{% endif %}>
+              Compte Stripe (email de connexion)
+            </option>
+            <option value="autre" {% if request.form.payout_preference == 'autre' %}selected{% endif %}>
+              Autre (à définir ensemble)
+            </option>
+          </select>
+        </div>
+
+        <!-- Coordonnées de paiement -->
+        <div style="margin-bottom:10px;">
+          <label for="payout_identifier" style="display:block;font-weight:600;margin-bottom:4px;">
+            Détails pour le paiement *
+          </label>
+          <input
+            type="text"
+            id="payout_identifier"
+            name="payout_identifier"
+            required
+            value="{{ request.form.payout_identifier or '' }}"
+            placeholder="IBAN complet, email PayPal ou email Stripe…"
+            style="
+              width:100%;
+              padding:9px 10px;
+              border-radius:9px;
+              border:1px solid #334155;
+              background:#020617;
+              color:#e5e7eb;
+              font-size:13px;
+            ">
+          <p style="font-size:11px;opacity:.75;margin:3px 0 0;">
+            Ces informations ne servent qu’à vous verser vos commissions. Elles ne seront jamais revendues.
+          </p>
+        </div>
+
+        <!-- Conditions -->
+        <div style="margin-bottom:12px;">
+          <label style="display:flex;align-items:flex-start;gap:6px;cursor:pointer;">
+            <input
+              type="checkbox"
+              name="accept_terms"
+              value="1"
+              style="margin-top:2px;"
+              {% if request.form.accept_terms %}checked{% endif %}>
+            <span style="font-size:11px;opacity:.85;">
+              J’accepte de recommander Betty Bot de manière honnête, sans promesses irréalistes,
+              et je comprends que mes revenus dépendent des abonnements réellement souscrits.
+            </span>
+          </label>
+        </div>
+
+        <!-- BOUTON -->
+        <button type="submit"
+          style="
+            width:100%;
+            padding:11px 10px;
+            border-radius:999px;
+            border:none;
+            background:linear-gradient(90deg,#3b82f6,#6366f1,#ec4899);
+            color:#f9fafb;
+            font-weight:600;
+            font-size:14px;
+            cursor:pointer;
+            box-shadow:0 12px 32px rgba(15,23,42,0.9);
+          ">
+          Créer mon lien ambassadeur
+        </button>
+
+        <p style="font-size:11px;opacity:.8;margin:6px 0 0;text-align:center;">
+          Après validation, vous serez redirigé vers votre <strong>dashboard</strong>
+          avec votre lien traqué et vos scripts de vente.
+        </p>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- BLOC EXEMPLES DE REVENUS (sous la carte principale) -->
+  <div style="
+      margin-top:24px;
+      border-radius:20px;
+      border:1px solid rgba(148,163,184,0.6);
+      padding:18px 20px;
+      background:radial-gradient(circle at top,#0f172a,#020617);
+      color:#e5e7eb;
+      font-size:14px;
+    ">
+    <h2 style="font-size:1.1rem;margin-top:0;margin-bottom:8px;">
+      📊 Exemples de revenus possibles (sur 6&nbsp;mois)
     </h2>
-    <p style="margin:0 0 6px;">
-      <em>Hypothèse :</em> un abonnement reste actif au moins <strong>6&nbsp;mois</strong>.
+    <p style="margin:0 0 6px;opacity:.9;">
+      Hypothèse : un abonnement reste actif au moins <strong>6&nbsp;mois</strong>.
+      Vous touchez 30&nbsp;% de 79,90&nbsp;€ (≈ 24&nbsp;€) à l’inscription, puis <strong>10&nbsp;€ / mois</strong>
+      tant que l’abonnement est actif.
     </p>
-    <ul style="margin: 0 0 4px 18px; padding:0;">
-      <li>
-        <strong>1 abonnement vendu par semaine</strong>
-        (≈ 4 par mois, soit 24 en 6 mois) :
-        <ul style="margin:4px 0 6px 16px; padding:0;">
-          <li>Prime d’inscription ≈ 24&nbsp;€ × 24 = <strong>576&nbsp;€</strong></li>
-          <li>Récurrent mensuel ≈ 10&nbsp;€ × 24 = <strong>240&nbsp;€ / mois</strong></li>
-          <li>Sur 6&nbsp;mois ≈ 576&nbsp;€ + (240&nbsp;€ × 6) = <strong>2&nbsp;016&nbsp;€ cumulés</strong></li>
+    <ul style="margin:6px 0 0 18px;padding:0;">
+      <li style="margin-bottom:6px;">
+        <strong>1 abonnement vendu par semaine</strong> (≈ 4 / mois, soit 24 en 6&nbsp;mois) :
+        <ul style="margin:4px 0 0 16px;padding:0;">
+          <li>Prime d’inscription : 24&nbsp;€ × 24 = <strong>576&nbsp;€</strong></li>
+          <li>Récurrent mensuel : 10&nbsp;€ × 24 = <strong>240&nbsp;€ / mois</strong></li>
+          <li>Sur 6&nbsp;mois : 576&nbsp;€ + (240&nbsp;€ × 6) = <strong>2&nbsp;016&nbsp;€ cumulés</strong></li>
         </ul>
       </li>
       <li>
-        <strong>5 abonnements vendus par semaine</strong>
-        (≈ 20 par mois, soit 120 en 6 mois) :
-        <ul style="margin:4px 0 0 16px; padding:0;">
-          <li>Prime d’inscription ≈ 24&nbsp;€ × 120 = <strong>2&nbsp;880&nbsp;€</strong></li>
-          <li>Récurrent mensuel ≈ 10&nbsp;€ × 120 = <strong>1&nbsp;200&nbsp;€ / mois</strong></li>
-          <li>Sur 6&nbsp;mois ≈ 2&nbsp;880&nbsp;€ + (1&nbsp;200&nbsp;€ × 6) = <strong>10&nbsp;080&nbsp;€</strong></li>
+        <strong>5 abonnements vendus par semaine</strong> (≈ 20 / mois, soit 120 en 6&nbsp;mois) :
+        <ul style="margin:4px 0 0 16px;padding:0;">
+          <li>Prime d’inscription : 24&nbsp;€ × 120 = <strong>2&nbsp;880&nbsp;€</strong></li>
+          <li>Récurrent mensuel : 10&nbsp;€ × 120 = <strong>1&nbsp;200&nbsp;€ / mois</strong></li>
+          <li>Sur 6&nbsp;mois : 2&nbsp;880&nbsp;€ + (1&nbsp;200&nbsp;€ × 6) = <strong>10&nbsp;080&nbsp;€ cumulés</strong></li>
         </ul>
       </li>
     </ul>
-    <p style="margin:6px 0 0;">
-      Ce sont des ordres de grandeur pour vous aider à vous projeter. Les résultats réels
-      dépendent de la durée de vie des abonnements et de votre activité.
-    </p>
-    <p style="margin:6px 0 0;">
-      Vous êtes libre : vous pouvez en faire un <strong>complément de revenu</strong>,
-      ou une vraie activité de vente spécialisée dans les solutions IA.
+    <p style="margin:8px 0 0;font-size:13px;opacity:.85;">
+      Ce sont des ordres de grandeur pour vous aider à vous projeter. Vous pouvez utiliser ce programme
+      comme un <strong>simple complément de revenu</strong> ou en faire une vraie activité de vente de solutions IA.
     </p>
   </div>
-
-  <h2 style="font-size:1.1rem; margin-bottom:10px;">
-    ✍️ Inscription au programme ambassadeur
-  </h2>
-  <p style="font-size:14px; opacity:.9; margin-bottom:12px;">
-    Remplissez ce formulaire pour recevoir votre <strong>code ambassadeur</strong> et votre
-    <strong>lien à partager</strong>. Après validation, vous serez redirigé directement
-    vers votre <strong>dashboard</strong>.
-  </p>
-
-  {% if error %}
-    <div style="
-        background:#7f1d1d;
-        color:#fee2e2;
-        border-radius: 8px;
-        padding: 10px 12px;
-        font-size: 13px;
-        margin-bottom: 14px;
-      ">
-      {{ error }}
-    </div>
-  {% endif %}
-
-  <form method="post" action="{{ url_for('inscription') }}"
-        style="
-          border-radius: 14px;
-          border: 1px solid rgba(148,163,184,0.5);
-          padding: 18px 18px 20px;
-          background: #020617;
-          color:#e5e7eb;
-          font-size:14px;
-        ">
-
-    <div style="margin-bottom:12px;">
-      <label for="name" style="display:block; font-weight:600; margin-bottom:4px;">
-        Votre nom complet *
-      </label>
-      <input
-        type="text"
-        id="name"
-        name="name"
-        required
-        value="{{ request.form.name or '' }}"
-        style="
-          width:100%;
-          padding:9px 10px;
-          border-radius:8px;
-          border:1px solid #334155;
-          background:#020617;
-          color:#e5e7eb;
-        "
-      >
-    </div>
-
-    <div style="margin-bottom:12px;">
-      <label for="email" style="display:block; font-weight:600; margin-bottom:4px;">
-        Votre adresse email *
-      </label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        required
-        value="{{ request.form.email or '' }}"
-        style="
-          width:100%;
-          padding:9px 10px;
-          border-radius:8px;
-          border:1px solid #334155;
-          background:#020617;
-          color:#e5e7eb;
-        "
-      >
-      <p style="font-size:12px; opacity:.75; margin:4px 0 0;">
-        Cette adresse servira à vous retrouver si vous perdez votre lien.
-      </p>
-    </div>
-
-    <div style="margin-bottom:12px;">
-      <label for="payout_preference" style="display:block; font-weight:600; margin-bottom:4px;">
-        Préférence de paiement *
-      </label>
-      <select
-        id="payout_preference"
-        name="payout_preference"
-        required
-        style="
-          width:100%;
-          padding:9px 10px;
-          border-radius:8px;
-          border:1px solid #334155;
-          background:#020617;
-          color:#e5e7eb;
-        "
-      >
-        <option value="">Choisissez une option…</option>
-        <option value="virement" {% if request.form.payout_preference == 'virement' %}selected{% endif %}>
-          Virement bancaire (RIB / IBAN)
-        </option>
-        <option value="stripe" {% if request.form.payout_preference == 'stripe' %}selected{% endif %}>
-          Compte Stripe (email de connexion)
-        </option>
-        <option value="autre" {% if request.form.payout_preference == 'autre' %}selected{% endif %}>
-          Autre méthode (à discuter)
-        </option>
-      </select>
-      <p style="font-size:12px; opacity:.75; margin:4px 0 0;">
-        Nous pourrons ajuster avec vous le mode de paiement exact si besoin.
-      </p>
-    </div>
-
-    <div style="margin-bottom:12px;">
-      <label for="payout_identifier" style="display:block; font-weight:600; margin-bottom:4px;">
-        Coordonnées pour vous payer *
-      </label>
-      <input
-        type="text"
-        id="payout_identifier"
-        name="payout_identifier"
-        required
-        value="{{ request.form.payout_identifier or '' }}"
-        style="
-          width:100%;
-          padding:9px 10px;
-          border-radius:8px;
-          border:1px solid #334155;
-          background:#020617;
-          color:#e5e7eb;
-        "
-      >
-      <p style="font-size:12px; opacity:.75; margin:4px 0 0;">
-        Ces informations restent confidentielles et servent uniquement à vous verser vos commissions.
-      </p>
-    </div>
-
-    <div style="margin-bottom:16px;">
-      <label style="display:flex; align-items:flex-start; gap:6px; cursor:pointer;">
-        <input
-          type="checkbox"
-          name="accept_terms"
-          value="1"
-          style="margin-top:2px;"
-          {% if request.form.accept_terms %}checked{% endif %}
-        >
-        <span style="font-size:12px; opacity:.85;">
-          J’accepte de recommander Betty Bot de manière honnête, sans promesse exagérée, et je comprends
-          que les revenus dépendent du nombre d’abonnements réellement souscrits.
-        </span>
-      </label>
-    </div>
-
-    <button type="submit"
-            style="
-              display:inline-block;
-              padding:10px 22px;
-              border-radius:999px;
-              border:none;
-              background:linear-gradient(90deg,#4F46E5,#6366F1,#EC4899);
-              color:#f9fafb;
-              font-weight:600;
-              font-size:14px;
-              cursor:pointer;
-              box-shadow:0 10px 25px rgba(15,23,42,0.6);
-            ">
-      Créer mon compte ambassadeur
-    </button>
-    <p style="font-size:12px; opacity:.75; margin-top:6px;">
-      Après validation, vous arriverez sur votre dashboard avec votre lien et vos scripts de vente.
-    </p>
-
-  </form>
 
 </div>
 
