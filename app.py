@@ -9,8 +9,12 @@ load_dotenv()
 
 from flask import Flask, render_template, request, redirect, url_for
 
-# Optionnel: mailing.py à la racine
-# from mailing import send_ambassador_welcome_email
+# ✅ Active l'envoi mail si mailing.py est présent à la racine
+# mailing.py doit exposer: send_ambassador_welcome_email(to_email, firstname, code, dashboard_url, short_link, tracking_target)
+try:
+    from mailing import send_ambassador_welcome_email  # type: ignore
+except Exception:
+    send_ambassador_welcome_email = None
 
 
 # --------------------
@@ -19,6 +23,11 @@ from flask import Flask, render_template, request, redirect, url_for
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_DIR = os.path.join(BASE_DIR, "database")
 DB_PATH = os.path.join(DB_DIR, "betty.db")
+
+APP_BASE_URL = os.environ.get("APP_BASE_URL", "").strip().rstrip("/")  # ex: https://betty-bots-ambassador.onrender.com
+if not APP_BASE_URL:
+    # fallback: on utilisera url_for(..., _external=True) qui prendra l'host courant (OK en prod)
+    APP_BASE_URL = None
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
@@ -63,10 +72,8 @@ init_db()
 
 
 def generate_code(conn: sqlite3.Connection) -> str:
-    """
-    Génère un code ambassadeur lisible (6 chars) unique.
-    """
-    for _ in range(20):
+    """Génère un code ambassadeur lisible (6 chars) unique."""
+    for _ in range(30):
         candidate = secrets.token_urlsafe(4)[:6]
         candidate = candidate.replace("-", "A").replace("_", "B").upper()
 
@@ -74,11 +81,29 @@ def generate_code(conn: sqlite3.Connection) -> str:
             "SELECT 1 FROM ambassadors WHERE code = ?",
             (candidate,),
         ).fetchone()
-
         if not row:
             return candidate
 
     raise RuntimeError("Impossible de générer un code ambassadeur unique.")
+
+
+def build_dashboard_url(code: str) -> str:
+    # dashboard avec code
+    if APP_BASE_URL:
+        return f"{APP_BASE_URL}/dashboard?code={code}"
+    return url_for("dashboard", code=code, _external=True)
+
+
+def build_short_link(code: str) -> str:
+    # lien court /l/<code>
+    if APP_BASE_URL:
+        return f"{APP_BASE_URL}/l/{code}"
+    return url_for("redirect_with_ref", code=code, _external=True)
+
+
+def build_tracking_target(code: str) -> str:
+    # cible finale côté Spectra Media
+    return f"https://www.spectramedia.online/?ref={code}"
 
 
 # --------------------
@@ -96,62 +121,93 @@ def inscription():
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
         email = (request.form.get("email") or "").strip().lower()
+
         payout_preference = (request.form.get("payout_preference") or "").strip()
         payout_identifier = (request.form.get("payout_identifier") or "").strip()
+
         accept_terms = (request.form.get("accept_terms") or "").strip()
 
-        if not name or not email or not payout_preference or not payout_identifier:
-            error = "Merci de remplir tous les champs obligatoires pour rejoindre le programme ambassadeur."
+        # ✅ Règles: seulement nom + email obligatoires + accept_terms obligatoire
+        if not name or not email:
+            error = "Merci de remplir au minimum votre nom et votre email."
         elif not accept_terms:
             error = "Merci de cocher la case d’acceptation des conditions pour continuer."
         else:
+            # champs optionnels => None si vide (stockage propre)
+            payout_preference_db = payout_preference or None
+            payout_identifier_db = payout_identifier or None
+
+            created_now = datetime.datetime.utcnow().isoformat()
+            is_new = False
+
             with closing(get_db()) as conn:
                 existing = conn.execute(
                     "SELECT * FROM ambassadors WHERE email = ?",
                     (email,),
                 ).fetchone()
 
-                now = datetime.datetime.utcnow().isoformat()
-
                 if existing:
                     code = existing["code"]
 
-                    # Optionnel: si tu veux mettre à jour ses infos de paiement au passage
-                    conn.execute(
-                        """
-                        UPDATE ambassadors
-                        SET name = ?, payout_preference = ?, payout_identifier = ?
-                        WHERE email = ?
-                        """,
-                        (name, payout_preference, payout_identifier, email),
-                    )
-                    conn.commit()
+                    # ✅ Update "souple" : on n'écrase pas avec du vide
+                    updates = []
+                    params = []
 
-                    # Optionnel: renvoyer le mail même si déjà existant
-                    # send_welcome = True
+                    if name and name != (existing["name"] or ""):
+                        updates.append("name = ?")
+                        params.append(name)
+
+                    if payout_preference_db is not None:
+                        updates.append("payout_preference = ?")
+                        params.append(payout_preference_db)
+
+                    if payout_identifier_db is not None:
+                        updates.append("payout_identifier = ?")
+                        params.append(payout_identifier_db)
+
+                    if updates:
+                        params.append(email)
+                        conn.execute(
+                            f"UPDATE ambassadors SET {', '.join(updates)} WHERE email = ?",
+                            tuple(params),
+                        )
+                        conn.commit()
                 else:
                     code = generate_code(conn)
                     conn.execute(
                         """
                         INSERT INTO ambassadors (
-                            name, email, code, payout_preference,
-                            payout_identifier, created_at
+                            name, email, code,
+                            payout_preference, payout_identifier,
+                            created_at
                         )
                         VALUES (?, ?, ?, ?, ?, ?)
                         """,
-                        (name, email, code, payout_preference, payout_identifier, now),
+                        (name, email, code, payout_preference_db, payout_identifier_db, created_now),
                     )
                     conn.commit()
+                    is_new = True
 
-                    # send_welcome = True
+            # ✅ Envoi email (nouveau OU existant: je te laisse le choix)
+            # Ici: on envoie dans tous les cas (ça sert de "rappel de lien"), mais tu peux limiter à is_new.
+            if send_ambassador_welcome_email:
+                try:
+                    firstname = (name.split(" ")[0] if name else "")
+                    dashboard_url = build_dashboard_url(code)
+                    short_link = build_short_link(code)
+                    tracking_target = build_tracking_target(code)
 
-            # -------- Envoi email Mailjet (à activer quand mailing.py est prêt) --------
-            # try:
-            #     firstname = (name.split(" ")[0] if name else "")
-            #     send_ambassador_welcome_email(email, firstname, code)
-            # except Exception:
-            #     app.logger.exception("Erreur envoi email Mailjet (inscription ambassadeur)")
-            # -------------------------------------------------------------------------
+                    send_ambassador_welcome_email(
+                        to_email=email,
+                        firstname=firstname,
+                        code=code,
+                        dashboard_url=dashboard_url,
+                        short_link=short_link,
+                        tracking_target=tracking_target,
+                        is_new=is_new,
+                    )
+                except Exception:
+                    app.logger.exception("Erreur envoi email Mailjet (inscription ambassadeur)")
 
             return redirect(url_for("dashboard", code=code))
 
@@ -188,7 +244,7 @@ def dashboard():
         clicks = int(ambassador["clicks"])
         signups = int(ambassador["signups"])
 
-        # Estimations (comme tes pages)
+        # Estimations
         price = 79.90
         upfront_per = 0.30 * price
         recurring_per_month = 10.0
@@ -197,9 +253,8 @@ def dashboard():
         est_monthly_recurring = signups * recurring_per_month
         est_6m_total = signups * (upfront_per + recurring_per_month * 6)
 
-        # Liens
         short_link = url_for("redirect_with_ref", code=ambassador["code"], _external=True)
-        tracking_link = short_link  # on privilégie le shortlink pour compter les clics
+        tracking_link = short_link
 
         stats = {
             "clicks": clicks,
@@ -243,7 +298,7 @@ def redirect_with_ref(code):
             conn.commit()
             ref_code = ambassador["code"]
 
-    target = f"https://www.spectramedia.online/?ref={ref_code}"
+    target = build_tracking_target(ref_code)
     return redirect(target)
 
 
