@@ -10,7 +10,6 @@ from flask import (
     redirect,
     url_for,
     flash,
-    abort,
 )
 import stripe
 
@@ -26,14 +25,13 @@ DB_DIR = os.path.join(BASE_DIR, "database")
 DB_PATH = os.path.join(DB_DIR, "betty.db")
 SCHEMA_PATH = os.path.join(DB_DIR, "schema.sql")
 
-# URL de base de la page d’abonnement Betty (le site public)
-# -> c’est ici qu’on met spectramedia.online par défaut
+# URL de base de la page d’abonnement Betty (site public)
 BETTY_SIGNUP_BASE_URL = os.getenv(
     "BETTY_SIGNUP_BASE_URL",
     "https://www.spectramedia.online/"
 )
 
-# Config Stripe (optionnel, pour automatismes plus tard)
+# Stripe (optionnel pour plus tard)
 stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
 STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
 
@@ -76,14 +74,8 @@ def generate_unique_ref_code(conn, length_bytes: int = 4) -> str:
             return ref_code
 
 
-# -------------------------------------------------------------------
-# Hooks Flask
-# -------------------------------------------------------------------
-
-@app.before_first_request
-def before_first_request():
-    """S'assure que la base est prête avant la première requête."""
-    init_db()
+# ✅ IMPORTANT : on initialise une fois au chargement du module
+init_db()
 
 
 # -------------------------------------------------------------------
@@ -102,7 +94,7 @@ def inscription():
     Formulaire d'inscription ambassadeur.
 
     - GET : affiche le formulaire
-    - POST : enregistre l'ambassadeur + génère son lien dashboard.
+    - POST : enregistre l'ambassadeur + renvoie le lien dashboard.
     """
     conn = get_db_connection()
 
@@ -138,7 +130,7 @@ def inscription():
             if row:
                 ref_code = row["ref_code"]
 
-        # Lien direct vers le dashboard
+        # Lien direct vers le dashboard (pour l’afficher dans la page)
         dashboard_link = url_for("dashboard", ref=ref_code, _external=True)
         return render_template("inscription.html", link=dashboard_link)
 
@@ -154,8 +146,8 @@ def dashboard():
     Affiche :
     - infos ambassadeur
     - ventes (sales)
-    - total des commissions estimées (30% des ventes payées)
-    - le lien complet à partager (BETTY_SIGNUP_BASE_URL + ?ref=XXXX)
+    - total commissions (30% des ventes payées)
+    - lien complet à partager (spectramedia.online/?ref=XXXX)
     """
     ref_code = request.args.get("ref", "").strip()
     if not ref_code:
@@ -205,9 +197,8 @@ def dashboard():
 
 
 # -------------------------------------------------------------------
-# (Optionnel) endpoint webhook Stripe à brancher plus tard
+# (Optionnel) webhook Stripe – à compléter plus tard
 # -------------------------------------------------------------------
-
 # @app.route("/stripe/webhook", methods=["POST"])
 # def stripe_webhook():
 #     """Exemple de point d'entrée Stripe pour alimenter la table sales."""
@@ -222,14 +213,13 @@ def dashboard():
 #         print("Webhook error:", e)
 #         return "Bad payload", 400
 #
-#     # Ici tu traites l'événement (checkout.session.completed, invoice.paid, etc.)
-#     # et tu insères dans la table `sales` la vente correspondant à un ref_code.
-#     #
-#     # À faire plus tard pour l’automatisation complète.
+#     # TODO : traiter event (invoice.paid, checkout.session.completed, etc.)
+#     # et insérer dans `sales` avec le bon ambassador_id/ref_code.
 #
 #     return "ok", 200
 
 
 if __name__ == "__main__":
+    # En local : on garantit l'init, puis on lance le serveur
     init_db()
     app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)
