@@ -2,362 +2,171 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>{% block title %}Betty Bot · Ambassadeurs{% endblock %}</title>
+  <title>Betty Bot – Ambassadeurs</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <style>
-    :root {
+    :root{
       --bg: #020617;
-      --bg-soft: #020818;
-      --bg-card: #020617;
-      --border: #1e293b;
-      --accent: #4f46e5;
-      --accent-soft: #6366f1;
-      --accent-soft2: #22d3ee;
-      --accent-pink: #ec4899;
+      --bg-soft: #020617;
+      --card: #020617;
+      --primary: #6366f1;
+      --primary-soft: rgba(99,102,241,0.25);
+      --accent: #ec4899;
       --text: #e5e7eb;
-      --muted: #94a3b8;
-      --danger: #f97373;
-      --success: #22c55e;
-      --radius: 18px;
-      --shadow-card: 0 18px 40px rgba(15,23,42,0.85);
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.4);
+      --radius-lg: 22px;
+      --radius-xl: 26px;
     }
-
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;
+      background:
+        radial-gradient(circle at top left, #0f172a 0, #020617 55%),
+        radial-gradient(circle at bottom right, #020617 20%, #020617 80%);
+      color:var(--text);
+      min-height:100vh;
     }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: radial-gradient(circle at top, #020617 0, #000 55%, #020617 100%);
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                   "Inter", "Segoe UI", sans-serif;
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
+    a{color:inherit;text-decoration:none;}
+    .page-wrap{
+      max-width:1080px;
+      margin:0 auto;
+      padding:28px 16px 40px;
     }
-
-    body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    header.site-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:14px 18px;
+      margin-bottom:26px;
+      border-radius:999px;
+      background:radial-gradient(circle at top left,#1f2937,#020617);
+      border:1px solid rgba(148,163,184,0.55);
+      box-shadow:0 18px 60px rgba(15,23,42,0.9);
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    .page-shell {
-      max-width: 1000px;
-      margin: 0 auto;
-      padding: 24px 16px 40px;
-    }
-
-    /* HEADER TOP BAR (brand proche de spectramedia.online) */
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 16px;
-      margin-bottom: 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.4);
-      background: radial-gradient(circle at top left, #1f2937, #020617 60%, #000 100%);
-      box-shadow: 0 18px 40px rgba(15,23,42,0.9);
-      position: sticky;
-      top: 8px;
-      z-index: 20;
-      backdrop-filter: blur(14px);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 999px;
-      background: conic-gradient(
-        from 120deg,
-        #22d3ee,
-        #4f46e5,
-        #ec4899,
-        #22c55e,
-        #22d3ee
-      );
+    .brand-logo{
+      width:40px;
+      height:40px;
+      border-radius:999px;
+      background:conic-gradient(from 120deg,#22d3ee,#6366f1,#ec4899,#22c55e,#22d3ee);
+      padding:2px;
       display:flex;
       align-items:center;
       justify-content:center;
-      box-shadow: 0 0 14px rgba(96,165,250,0.75);
+      box-shadow:0 0 18px rgba(96,165,250,0.9);
+    }
+    .brand-logo-inner{
+      width:32px;
+      height:32px;
+      border-radius:999px;
+      background:#020617;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#f9fafb;
+      font-weight:800;
+      font-size:18px;
+    }
+    .brand-text-title{
+      font-size:15px;
+      font-weight:700;
+      letter-spacing:.08em;
+    }
+    .brand-text-sub{
+      font-size:11px;
+      color:var(--muted);
+    }
+    .header-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .badge-small{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.6);
+      background:rgba(15,23,42,0.9);
+      color:#cbd5f5;
+      white-space:nowrap;
+    }
+    .btn-pill{
+      padding:9px 18px;
+      border-radius:999px;
+      border:none;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:600;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      background:linear-gradient(90deg,#6366f1,#ec4899);
+      color:#f9fafb;
+      box-shadow:0 0 18px rgba(236,72,153,0.7);
+    }
+    .btn-pill.secondary{
+      background:transparent;
+      border:1px solid rgba(148,163,184,0.7);
+      box-shadow:none;
     }
 
-    .brand-logo span {
-      font-size: 14px;
-      font-weight: 800;
-      color: #020617;
+    main{
+      margin-top:8px;
     }
 
-    header h1 {
-      font-size: 15px;
-      margin: 0;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: #e5e7eb;
+    .footer{
+      margin-top:40px;
+      padding:18px 4px 8px;
+      text-align:center;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .footer a{
+      color:#8ab4ff;
     }
 
-    header .subtitle {
-      font-size: 11px;
-      color: var(--muted);
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .pill {
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      color: var(--muted);
-      background: rgba(15,23,42,0.8);
-      white-space: nowrap;
-    }
-
-    .btn-primary-small {
-      font-size: 12px;
-      font-weight: 600;
-      padding: 7px 14px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      background: linear-gradient(120deg, var(--accent), var(--accent-pink));
-      color: #f9fafb;
-      box-shadow: 0 0 18px rgba(79,70,229,0.8);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      text-decoration: none;
-    }
-
-    .btn-primary-small:hover {
-      filter: brightness(1.05);
-      text-decoration: none;
-    }
-
-    /* CONTENEUR PRINCIPAL */
-    main {
-      margin-top: 20px;
-    }
-
-    .card {
-      border-radius: var(--radius);
-      border: 1px solid rgba(148,163,184,0.4);
-      background: radial-gradient(circle at top left,
-                rgba(79,70,229,0.15),
-                rgba(15,23,42,0.96));
-      box-shadow: var(--shadow-card);
-      padding: 24px 22px;
-      margin-bottom: 20px;
-    }
-
-    .card h2 {
-      font-size: 1.3rem;
-      margin: 0 0 6px;
-    }
-
-    .card p.lead {
-      margin: 0 0 12px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
-      gap: 20px;
-    }
-
-    @media (max-width: 800px) {
-      header {
-        flex-direction: column;
-        align-items: flex-start;
-        border-radius: 18px;
+    @media (max-width:720px){
+      header.site-header{
+        flex-direction:column;
+        align-items:flex-start;
+        gap:10px;
       }
-
-      .grid-2 {
-        grid-template-columns: minmax(0,1fr);
+      .header-right{
+        width:100%;
+        justify-content:flex-start;
+        flex-wrap:wrap;
       }
-    }
-
-    /* Boutons / inputs génériques utilisés dans les pages */
-    .btn-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 22px;
-      border-radius: 999px;
-      border: none;
-      background: linear-gradient(120deg, var(--accent), var(--accent-pink));
-      color: #f9fafb;
-      font-weight: 600;
-      font-size: 15px;
-      cursor: pointer;
-      box-shadow: 0 18px 38px rgba(56,189,248,0.35);
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .btn-primary:hover {
-      filter: brightness(1.06);
-      text-decoration: none;
-    }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 11px 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.5);
-      background: rgba(15,23,42,0.75);
-      color: var(--muted);
-      font-size: 13px;
-      cursor: pointer;
-      text-decoration: none;
-    }
-
-    .field-group {
-      margin-bottom: 14px;
-    }
-
-    .field-label {
-      font-size: 13px;
-      margin-bottom: 4px;
-      color: var(--muted);
-    }
-
-    input, select, textarea {
-      width: 100%;
-      padding: 9px 11px;
-      border-radius: 10px;
-      border: 1px solid rgba(51,65,85,0.9);
-      background: rgba(2,6,23,0.9);
-      color: var(--text);
-      font-size: 14px;
-      outline: none;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent-soft);
-      box-shadow: 0 0 0 1px rgba(99,102,241,0.6);
-    }
-
-    textarea {
-      min-height: 90px;
-      resize: vertical;
-    }
-
-    .hint {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.9);
-      border: 1px solid rgba(148,163,184,0.5);
-      font-size: 11px;
-      color: var(--muted);
-      gap: 4px;
-    }
-
-    .badge-commission {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(22,163,74,0.1);
-      border: 1px solid rgba(22,163,74,0.75);
-      color: #bbf7d0;
-      font-size: 11px;
-    }
-
-    .text-center { text-align: center; }
-    .text-right { text-align: right; }
-
-    .sep {
-      height: 1px;
-      border-radius: 999px;
-      background: radial-gradient(circle at center,
-                  rgba(148,163,184,0.8),
-                  rgba(15,23,42,0.8));
-      opacity: 0.45;
-      margin: 14px 0;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 20px 16px 28px;
-      text-align: center;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .pill-ambassador {
-      background: radial-gradient(circle at top left,
-        rgba(96,165,250,0.15),
-        rgba(15,23,42,0.95));
-      border-color: rgba(129,140,248,0.85);
-      color: #c7d2fe;
     }
   </style>
-
-  {% block head_extra %}{% endblock %}
 </head>
 <body>
-  <div class="page-shell">
-
-    <header>
+  <div class="page-wrap">
+    <header class="site-header">
       <div class="brand">
         <div class="brand-logo">
-          <span>B</span>
+          <div class="brand-logo-inner">B</div>
         </div>
         <div>
-          <h1>Betty Bot · Ambassadeurs</h1>
-          <div class="subtitle">Gagnez de l’argent en recommandant une IA qui travaille 24h/24.</div>
+          <div class="brand-text-title">BETTY BOT · AMBASSADEURS</div>
+          <div class="brand-text-sub">
+            Gagnez de l’argent en recommandant une IA qui travaille 24h/24.
+          </div>
         </div>
       </div>
-
-      <div class="header-actions">
-        <div class="pill pill-ambassador">
-          ⚡ Programme ambassadeur • 30% à l’inscription + 10€ / mois
+      <div class="header-right">
+        <div class="badge-small">
+          Programme ambassadeur · 30% à l’inscription + 10€ / mois
         </div>
-        <a href="https://www.spectramedia.online/" class="btn-primary-small" target="_blank" rel="noopener">
+        <a class="btn-pill secondary" href="https://www.spectramedia.online/" target="_blank" rel="noopener">
           Voir la page Betty Bot
         </a>
       </div>
@@ -367,13 +176,10 @@
       {% block content %}{% endblock %}
     </main>
 
-    <footer>
+    <div class="footer">
       Spectra Media AI · Programme Ambassadeurs Betty Bot — contact :
       <a href="mailto:spectramediabots@gmail.com">spectramediabots@gmail.com</a>
-    </footer>
-
+    </div>
   </div>
-
-  {% block scripts %}{% endblock %}
 </body>
 </html>
