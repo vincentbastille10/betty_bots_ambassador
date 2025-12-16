@@ -153,7 +153,7 @@
       </div>
 
       {% if error %}
-        <div style="
+        <div role="alert" aria-live="polite" style="
             background:#7f1d1d;
             color:#fee2e2;
             border-radius: 8px;
@@ -165,7 +165,7 @@
         </div>
       {% endif %}
 
-      <form method="post" action="{{ url_for('inscription') }}" style="font-size:13px;">
+      <form method="post" action="{{ url_for('inscription') }}" style="font-size:13px;" novalidate>
 
         <!-- Nom -->
         <div style="margin-bottom:10px;">
@@ -177,6 +177,8 @@
             id="name"
             name="name"
             required
+            maxlength="120"
+            autocomplete="name"
             value="{{ request.form.name or '' }}"
             style="
               width:100%;
@@ -199,6 +201,9 @@
             id="email"
             name="email"
             required
+            maxlength="190"
+            autocomplete="email"
+            inputmode="email"
             value="{{ request.form.email or '' }}"
             style="
               width:100%;
@@ -214,15 +219,14 @@
           </p>
         </div>
 
-        <!-- Mode de paiement -->
+        <!-- Mode de paiement (optionnel) -->
         <div style="margin-bottom:10px;">
           <label for="payout_preference" style="display:block;font-weight:600;margin-bottom:4px;">
-            Comment souhaitez-vous être payé(e) ? *
+            Comment souhaitez-vous être payé(e) ? <span style="opacity:.7;">(optionnel)</span>
           </label>
           <select
             id="payout_preference"
             name="payout_preference"
-            required
             style="
               width:100%;
               padding:9px 10px;
@@ -232,7 +236,7 @@
               color:#e5e7eb;
               font-size:13px;
             ">
-            <option value="">Sélectionnez…</option>
+            <option value="">Je le renseigne plus tard</option>
             <option value="virement" {% if request.form.payout_preference == 'virement' %}selected{% endif %}>
               Virement bancaire (IBAN)
             </option>
@@ -248,16 +252,17 @@
           </select>
         </div>
 
-        <!-- Coordonnées de paiement -->
+        <!-- Coordonnées de paiement (optionnel) -->
         <div style="margin-bottom:10px;">
           <label for="payout_identifier" style="display:block;font-weight:600;margin-bottom:4px;">
-            Détails pour le paiement *
+            Détails pour le paiement <span style="opacity:.7;">(optionnel pour l’instant)</span>
           </label>
           <input
             type="text"
             id="payout_identifier"
             name="payout_identifier"
-            required
+            maxlength="220"
+            autocomplete="off"
             value="{{ request.form.payout_identifier or '' }}"
             placeholder="IBAN complet, email PayPal ou email Stripe…"
             style="
@@ -270,7 +275,7 @@
               font-size:13px;
             ">
           <p style="font-size:11px;opacity:.75;margin:3px 0 0;">
-            Ces informations ne servent qu’à vous verser vos commissions. Elles ne seront jamais revendues.
+            Vous pouvez le renseigner plus tard. Cela sert uniquement à vous verser vos commissions.
           </p>
         </div>
 
