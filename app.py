@@ -1,225 +1,210 @@
 import os
 import sqlite3
 import secrets
-from datetime import datetime
+import datetime
 
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    url_for,
-    flash,
-)
-import stripe
+from flask import Flask, render_template, request, redirect, url_for
 
-# -------------------------------------------------------------------
-# Configuration de base
-# -------------------------------------------------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_PATH = os.path.join(BASE_DIR, "database", "betty.db")
 
 app = Flask(__name__)
-app.secret_key = os.getenv("FLASK_SECRET_KEY", "change_me_en_valeur_secret")
-
-BASE_DIR = os.path.abspath(os.path.dirname(__file__))
-DB_DIR = os.path.join(BASE_DIR, "database")
-DB_PATH = os.path.join(DB_DIR, "betty.db")
-SCHEMA_PATH = os.path.join(DB_DIR, "schema.sql")
-
-# URL de base de la page d’abonnement Betty (site public)
-BETTY_SIGNUP_BASE_URL = os.getenv(
-    "BETTY_SIGNUP_BASE_URL",
-    "https://www.spectramedia.online/"
-)
-
-# Stripe (optionnel pour plus tard)
-stripe.api_key = os.getenv("STRIPE_SECRET_KEY")
-STRIPE_WEBHOOK_SECRET = os.getenv("STRIPE_WEBHOOK_SECRET")
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
 
-# -------------------------------------------------------------------
-# Utilitaires base de données
-# -------------------------------------------------------------------
-
-def get_db_connection():
-    """Ouvre une connexion SQLite avec accès par nom de colonne."""
+# --------------------
+# BDD
+# --------------------
+def get_db():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def init_db():
-    """Crée la base de données à partir de schema.sql si betty.db n'existe pas."""
-    if not os.path.exists(DB_DIR):
-        os.makedirs(DB_DIR, exist_ok=True)
-
-    if not os.path.exists(DB_PATH):
-        print("Initialisation de la base de données...")
-        conn = sqlite3.connect(DB_PATH)
-        with open(SCHEMA_PATH, "r", encoding="utf-8") as f:
-            conn.executescript(f.read())
-        conn.commit()
-        conn.close()
-        print("Base de données créée.")
-
-
-def generate_unique_ref_code(conn, length_bytes: int = 4) -> str:
-    """Génère un ref_code unique non présent dans la table ambassadors."""
-    while True:
-        ref_code = secrets.token_urlsafe(length_bytes)
-        row = conn.execute(
-            "SELECT id FROM ambassadors WHERE ref_code = ?",
-            (ref_code,),
-        ).fetchone()
-        if row is None:
-            return ref_code
+    os.makedirs(os.path.join(BASE_DIR, "database"), exist_ok=True)
+    conn = get_db()
+    cur = conn.cursor()
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS ambassadors (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            email TEXT NOT NULL,
+            code TEXT NOT NULL UNIQUE,
+            payout_preference TEXT,
+            payout_identifier TEXT,
+            created_at TEXT NOT NULL,
+            clicks INTEGER NOT NULL DEFAULT 0,
+            signups INTEGER NOT NULL DEFAULT 0
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
 
 
-# ✅ IMPORTANT : on initialise une fois au chargement du module
 init_db()
 
 
-# -------------------------------------------------------------------
-# Routes principales
-# -------------------------------------------------------------------
+def generate_code():
+    """
+    Génère un petit code ambassadeur lisible (6 caractères).
+    """
+    for _ in range(10):
+        candidate = secrets.token_urlsafe(4)[:6]
+        candidate = candidate.replace("-", "A").replace("_", "B")
+        conn = get_db()
+        row = conn.execute(
+            "SELECT 1 FROM ambassadors WHERE code = ?", (candidate,)
+        ).fetchone()
+        conn.close()
+        if not row:
+            return candidate
+    raise RuntimeError("Impossible de générer un code ambassadeur unique.")
 
+
+# --------------------
+# Routes
+# --------------------
 @app.route("/")
 def index():
-    """Redirige simplement vers l'inscription ambassadeur."""
+    # Redirige directement vers l’inscription ambassadeur
     return redirect(url_for("inscription"))
 
 
 @app.route("/inscription", methods=["GET", "POST"])
 def inscription():
-    """
-    Formulaire d'inscription ambassadeur.
-
-    - GET : affiche le formulaire
-    - POST : enregistre l'ambassadeur + renvoie le lien dashboard.
-    """
-    conn = get_db_connection()
+    error = None
 
     if request.method == "POST":
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        payout_method = request.form.get("payout_method", "").strip()
-        payout_details = request.form.get("payout_details", "").strip()
+        name = (request.form.get("name") or "").strip()
+        email = (request.form.get("email") or "").strip().lower()
+        payout_preference = (request.form.get("payout_preference") or "").strip()
+        payout_identifier = (request.form.get("payout_identifier") or "").strip()
+        accept_terms = request.form.get("accept_terms")
 
-        if not name or not email or not payout_method or not payout_details:
-            flash("Tous les champs sont obligatoires.", "error")
-            return render_template("inscription.html", link=None)
-
-        # Génère un ref_code unique
-        ref_code = generate_unique_ref_code(conn)
-
-        try:
-            conn.execute(
-                """
-                INSERT INTO ambassadors (name, email, payout_method, payout_details, ref_code)
-                VALUES (?, ?, ?, ?, ?)
-                """,
-                (name, email, payout_method, payout_details, ref_code),
-            )
-            conn.commit()
-        except sqlite3.IntegrityError:
-            # email déjà utilisé par un ambassadeur : on récupère son ref_code existant
-            flash("Cet email est déjà inscrit comme ambassadeur.", "error")
-            row = conn.execute(
-                "SELECT ref_code FROM ambassadors WHERE email = ?",
-                (email,),
+        if not name or not email or not payout_preference or not payout_identifier or not accept_terms:
+            error = "Merci de remplir tous les champs obligatoires et d’accepter les conditions."
+        else:
+            conn = get_db()
+            # Si l'email existe déjà, on réutilise le même compte
+            existing = conn.execute(
+                "SELECT code FROM ambassadors WHERE email = ?", (email,)
             ).fetchone()
-            if row:
-                ref_code = row["ref_code"]
 
-        # Lien direct vers le dashboard (pour l’afficher dans la page)
-        dashboard_link = url_for("dashboard", ref=ref_code, _external=True)
-        return render_template("inscription.html", link=dashboard_link)
+            if existing:
+                code = existing["code"]
+            else:
+                code = generate_code()
+                now = datetime.datetime.utcnow().isoformat()
+                conn.execute(
+                    """
+                    INSERT INTO ambassadors (name, email, code, payout_preference, payout_identifier, created_at)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (name, email, code, payout_preference, payout_identifier, now),
+                )
+                conn.commit()
 
-    # GET
-    return render_template("inscription.html", link=None)
+            conn.close()
+
+            # 🔁 Redirection directe vers le dashboard, avec le code dans l’URL
+            return redirect(url_for("dashboard", code=code))
+
+    return render_template("inscription.html", error=error)
 
 
 @app.route("/dashboard")
 def dashboard():
-    """
-    Dashboard ambassadeur : /dashboard?ref=XXXX
+    code = (request.args.get("code") or "").strip()
+    email = (request.args.get("email") or "").strip().lower()
 
-    Affiche :
-    - infos ambassadeur
-    - ventes (sales)
-    - total commissions (30% des ventes payées)
-    - lien complet à partager (spectramedia.online/?ref=XXXX)
-    """
-    ref_code = request.args.get("ref", "").strip()
-    if not ref_code:
-        return "Lien invalide (ref manquant).", 400
+    conn = get_db()
+    ambassador = None
 
-    conn = get_db_connection()
+    if code:
+        ambassador = conn.execute(
+            "SELECT * FROM ambassadors WHERE code = ?", (code,)
+        ).fetchone()
+    elif email:
+        ambassador = conn.execute(
+            "SELECT * FROM ambassadors WHERE email = ?", (email,)
+        ).fetchone()
 
-    ambassador = conn.execute(
-        "SELECT * FROM ambassadors WHERE ref_code = ?",
-        (ref_code,),
-    ).fetchone()
+    if not ambassador:
+        conn.close()
+        # Dashboard "vide" avec message doux
+        return render_template(
+            "dashboard.html",
+            ambassador=None,
+            stats=None,
+            not_found=True,
+        )
 
-    if ambassador is None:
-        return "Ambassadeur inconnu.", 404
+    # Statistiques de base
+    clicks = ambassador["clicks"]
+    signups = ambassador["signups"]
 
-    ventes = conn.execute(
-        "SELECT * FROM sales WHERE ambassador_id = ? ORDER BY date DESC",
-        (ambassador["id"],),
-    ).fetchall()
+    # Hypothèses pour l’estimation
+    price = 79.90
+    upfront_per = 0.30 * price  # 30 % de 79,90 €
+    recurring_per_month = 10.0   # 10 € / mois / abonnement
 
-    nb_ventes = len(ventes)
-    nb_payees = sum(1 for v in ventes if v["paid"])
-    nb_en_attente = nb_ventes - nb_payees
+    est_upfront_total = signups * upfront_per
+    est_monthly_recurring = signups * recurring_per_month
+    est_6m_total = signups * (upfront_per + recurring_per_month * 6)
 
-    # Total commissions = 30% des ventes payées
-    total_commissions = sum(
-        (v["amount"] * 0.30) / 100 for v in ventes if v["paid"]
-    )
+    tracking_link = f"https://www.spectramedia.online/?ref={ambassador['code']}"
+    short_link = url_for("redirect_with_ref", code=ambassador["code"], _external=True)
 
-    now = datetime.now().strftime("%d/%m/%Y %H:%M")
+    stats = {
+        "clicks": clicks,
+        "signups": signups,
+        "tracking_link": tracking_link,
+        "short_link": short_link,
+        "upfront_per": upfront_per,
+        "est_upfront_total": est_upfront_total,
+        "est_monthly_recurring": est_monthly_recurring,
+        "est_6m_total": est_6m_total,
+    }
 
-    # Lien à partager : page Betty Abo + ?ref=XXXX
-    share_link = f"{BETTY_SIGNUP_BASE_URL}?ref={ref_code}"
+    conn.close()
 
     return render_template(
         "dashboard.html",
         ambassador=ambassador,
-        ventes=ventes,
-        nb_ventes=nb_ventes,
-        nb_payees=nb_payees,
-        nb_en_attente=nb_en_attente,
-        total=round(total_commissions, 2),
-        now=now,
-        ref=ref_code,
-        share_link=share_link,
+        stats=stats,
+        not_found=False,
     )
 
 
-# -------------------------------------------------------------------
-# (Optionnel) webhook Stripe – à compléter plus tard
-# -------------------------------------------------------------------
-# @app.route("/stripe/webhook", methods=["POST"])
-# def stripe_webhook():
-#     """Exemple de point d'entrée Stripe pour alimenter la table sales."""
-#     payload = request.data
-#     sig_header = request.headers.get("Stripe-Signature", "")
-#
-#     try:
-#         event = stripe.Webhook.construct_event(
-#             payload, sig_header, STRIPE_WEBHOOK_SECRET
-#         )
-#     except Exception as e:
-#         print("Webhook error:", e)
-#         return "Bad payload", 400
-#
-#     # TODO : traiter event (invoice.paid, checkout.session.completed, etc.)
-#     # et insérer dans `sales` avec le bon ambassador_id/ref_code.
-#
-#     return "ok", 200
+@app.route("/l/<code>")
+def redirect_with_ref(code):
+    """
+    Lien court pour les ambassadeurs.
+    Incrémente les clics, puis redirige vers spectramedia.online avec ?ref=CODE.
+    """
+    conn = get_db()
+    ambassador = conn.execute(
+        "SELECT * FROM ambassadors WHERE code = ?", (code,)
+    ).fetchone()
+
+    if ambassador:
+        conn.execute(
+            "UPDATE ambassadors SET clicks = clicks + 1 WHERE id = ?",
+            (ambassador["id"],),
+        )
+        conn.commit()
+        ref_code = ambassador["code"]
+    else:
+        ref_code = code
+
+    conn.close()
+
+    target = f"https://www.spectramedia.online/?ref={ref_code}"
+    return redirect(target)
 
 
 if __name__ == "__main__":
-    # En local : on garantit l'init, puis on lance le serveur
-    init_db()
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", "5000")), debug=True)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
