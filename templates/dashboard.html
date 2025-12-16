@@ -1,155 +1,397 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Dashboard Ambassadeur – Betty Bot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root {
+      --bg: #020617;
+      --card: #020617;
+      --accent: #3b82f6;
+      --accent-pink: #ec4899;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: rgba(148,163,184,0.4);
+      --radius: 18px;
+      --shadow: 0 25px 80px rgba(15,23,42,0.85);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      color: #333;
-      padding: 20px;
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(59,130,246,0.4), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(236,72,153,0.35), transparent 60%),
+        #020617;
+      padding: 28px 14px 40px;
     }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.05);
-      padding: 30px;
+
+    .wrap {
+      max-width: 1040px;
+      margin: 0 auto;
     }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    .kicker {
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
     h1 {
-      text-align: center;
-      color: #ff5ca0;
-      margin-bottom: 10px;
+      margin: 0 0 6px;
+      font-size: clamp(1.7rem, 3vw, 2rem);
+      letter-spacing: -0.03em;
     }
-    h2 {
-      margin-top: 30px;
-      color: #444;
+
+    h1 span {
+      background: linear-gradient(135deg,#3b82f6,#ec4899);
+      -webkit-background-clip: text;
+      color: transparent;
     }
-    .summary {
-      margin-bottom: 30px;
-      background: #fff6fb;
-      border-radius: 12px;
-      padding: 15px 20px;
+
+    .meta {
+      font-size: 0.8rem;
+      color: var(--muted);
     }
-    .summary div {
-      margin: 6px 0;
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
+      gap: 20px;
+      margin-bottom: 22px;
     }
-    .summary strong {
-      color: #222;
+
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: minmax(0,1fr);
+      }
     }
+
+    .card {
+      background: radial-gradient(circle at top left,#0f172a,#020617 60%);
+      border-radius: 22px;
+      padding: 20px 18px;
+      border: 1px solid rgba(148,163,184,0.5);
+      box-shadow: var(--shadow);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .card-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 4px 9px;
+      color: var(--muted);
+    }
+
+    .share-block {
+      margin-top: 8px;
+    }
+
+    .share-label {
+      font-size: 0.8rem;
+      margin-bottom: 4px;
+      color: var(--muted);
+    }
+
+    .share-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .share-input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(15,23,42,0.95);
+      color: var(--text);
+      font-size: 0.8rem;
+      padding: 8px 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .btn-copy {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg,#3b82f6,#6366f1,#ec4899);
+      color: #f9fafb;
+      box-shadow: 0 10px 25px rgba(15,23,42,0.9);
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .stat {
+      flex: 1;
+      min-width: 110px;
+      padding: 10px 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.5);
+      background: rgba(15,23,42,0.95);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stat-value {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .stat-value.positive {
+      color: #4ade80;
+    }
+
+    .payout {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      font-size: 0.8rem;
+      margin-top: 8px;
     }
+
     th, td {
-      padding: 10px 8px;
-      border-bottom: 1px solid #eee;
-      font-size: 0.95rem;
-    }
-    th {
-      background: #ffedf5;
-      color: #ff5ca0;
+      padding: 8px 6px;
+      border-bottom: 1px solid rgba(31,41,55,0.9);
       text-align: left;
+      white-space: nowrap;
     }
+
+    th {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
     .paid {
-      color: green;
-      font-weight: bold;
+      color: #4ade80;
+      font-weight: 500;
     }
+
     .pending {
-      color: orange;
-      font-weight: bold;
+      color: #facc15;
+      font-weight: 500;
     }
-    code {
-      background: #f0f0f0;
-      padding: 2px 4px;
-      border-radius: 4px;
+
+    .empty {
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding-top: 6px;
     }
-    .small {
-      font-size: 0.85rem;
-      color: #777;
+
+    footer {
+      margin-top: 20px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
     }
-    .share-block {
-      margin-top: 12px;
-      padding: 10px;
-      background: #f0f0f0;
-      border-radius: 8px;
-    }
-    .share-input {
-      width: 100%;
-      padding: 8px;
-      font-family: monospace;
-      font-size: 0.9rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      box-sizing: border-box;
+
+    footer a {
+      color: #93c5fd;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>💼 Dashboard Ambassadeur</h1>
-    <p class="small">Dernière mise à jour : {{ now }}</p>
+  <div class="wrap">
+    <header>
+      <div class="kicker">Ambassadeur Betty Bot</div>
+      <h1>
+        Bonjour <span>{{ ambassador["name"] }}</span>
+      </h1>
+      <div class="meta">
+        Email : {{ ambassador["email"] }} · Dernière mise à jour : {{ now }}
+      </div>
+    </header>
 
-    <div class="summary">
-      <div><strong>Ambassadeur :</strong> {{ ambassador["name"] }} ({{ ambassador["email"] }})</div>
-      <div><strong>Votre code ambassadeur :</strong> <code>{{ ref }}</code></div>
-
-      <div style="margin-top:10px;"><strong>Votre lien à partager :</strong></div>
-      <div class="share-block">
-        <input class="share-input" value="{{ share_link }}" readonly onclick="this.select();">
-        <div class="small">
-          Copiez-collez ce lien dans vos messages, emails, réseaux sociaux, etc.
-          Chaque abonnement pris via ce lien sera comptabilisé dans vos ventes.
+    <div class="grid">
+      <!-- Colonne gauche : lien à partager + stats -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Votre lien à partager</div>
+            <div class="card-sub">
+              Envoyez ce lien à vos contacts (emails, messages, réseaux sociaux).
+              Chaque abonnement pris via ce lien sera comptabilisé dans vos ventes.
+            </div>
+          </div>
+          <div class="chip">
+            Code : {{ ref }}
+          </div>
         </div>
-      </div>
 
-      <div style="margin-top:10px;"><strong>Ventes réalisées :</strong> {{ nb_ventes }}</div>
-      <div><strong>Ventes payées :</strong> {{ nb_payees }}</div>
-      <div><strong>Ventes en attente de paiement :</strong> {{ nb_en_attente }}</div>
-      <div><strong>Total commissions estimées :</strong> {{ total }} €</div>
-      <div class="small">
-        Calcul indicatif : 30% du montant de chaque abonnement payé.<br>
-        Les virements sont effectués selon les conditions convenues avec Betty Bot.
-      </div>
+        <div class="share-block">
+          <div class="share-label">Lien Betty Bot à partager</div>
+          <div class="share-row">
+            <div class="share-input" id="share-link">{{ share_link }}</div>
+            <button class="btn-copy" type="button" onclick="copyShareLink()">
+              Copier
+            </button>
+          </div>
+          <div class="hint">
+            💡 Astuce&nbsp;: ajoutez une phrase simple avec ce lien, par exemple :
+            « Betty répond à vos clients quand vous êtes occupé(e). »
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-label">Ventes totales (via votre lien)</div>
+            <div class="stat-value">{{ nb_ventes }}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Ventes payées</div>
+            <div class="stat-value positive">{{ nb_payees }}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">En attente de paiement</div>
+            <div class="stat-value">{{ nb_en_attente }}</div>
+          </div>
+          <div class="stat">
+            <div class="stat-label">Total commissions estimées</div>
+            <div class="stat-value positive">{{ "%.2f"|format(total) }} €</div>
+          </div>
+        </div>
+
+        <div class="payout">
+          Méthode de paiement choisie :
+          <strong>{{ ambassador["payout_method"] }}</strong><br />
+          Détails fournis :
+          <span>{{ ambassador["payout_details"] }}</span><br />
+          Les virements sont effectués par Spectra Media AI selon les conditions
+          convenues (ex. une fois par mois au-delà d’un certain montant).
+        </div>
+      </section>
+
+      <!-- Colonne droite : détail des ventes -->
+      <section class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Détail des ventes</div>
+            <div class="card-sub">
+              Suivi des abonnements pris via votre lien. Les montants sont indicatifs.
+            </div>
+          </div>
+        </div>
+
+        {% if ventes %}
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Montant</th>
+                <th>Commission (30%)</th>
+                <th>Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for vente in ventes %}
+                <tr>
+                  <td>{{ vente["date"][:10] if vente["date"] else "-" }}</td>
+                  <td>{{ vente["customer_email"] or "-" }}</td>
+                  <td>{{ (vente["amount"] / 100) | round(2) }} €</td>
+                  <td>{{ ((vente["amount"] * 0.30) / 100) | round(2) }} €</td>
+                  <td>
+                    {% if vente["paid"] %}
+                      <span class="paid">✔️ Payé</span>
+                    {% else %}
+                      <span class="pending">En attente</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty">
+            Aucune vente enregistrée pour le moment. Partagez votre lien autour de vous
+            (artisans, commerçants, thérapeutes, professions libérales, etc.) pour
+            commencer à générer des commissions.
+          </p>
+        {% endif %}
+      </section>
     </div>
 
-    <h2>🧾 Détail des ventes</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Client</th>
-          <th>Montant</th>
-          <th>Commission (30%)</th>
-          <th>Payé</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for vente in ventes %}
-        <tr>
-          <td>{{ vente["date"][:10] }}</td>
-          <td>{{ vente["customer_email"] or "-" }}</td>
-          <td>{{ vente["amount"] / 100 }} €</td>
-          <td>{{ (vente["amount"] * 0.30) / 100 | round(2) }} €</td>
-          <td>
-            {% if vente["paid"] %}
-              <span class="paid">✔️ Payé</span>
-            {% else %}
-              <span class="pending">En attente</span>
-            {% endif %}
-          </td>
-        </tr>
-        {% else %}
-        <tr>
-          <td colspan="5">Aucune vente enregistrée pour le moment.</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
+    <footer>
+      Dashboard Ambassadeur Betty Bot · Propulsé par Spectra Media AI ·
+      <a href="mailto:spectramediabots@gmail.com">Contact</a>
+    </footer>
   </div>
+
+  <script>
+    function copyShareLink() {
+      const el = document.getElementById("share-link");
+      if (!el) return;
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      try {
+        document.execCommand("copy");
+      } catch (e) {}
+      sel.removeAllRanges();
+      alert("Lien copié dans le presse-papiers ✅");
+    }
+  </script>
 </body>
 </html>
