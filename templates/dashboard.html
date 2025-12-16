@@ -1,397 +1,340 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Dashboard Ambassadeur – Betty Bot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root {
-      --bg: #020617;
-      --card: #020617;
-      --accent: #3b82f6;
-      --accent-pink: #ec4899;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border: rgba(148,163,184,0.4);
-      --radius: 18px;
-      --shadow: 0 25px 80px rgba(15,23,42,0.85);
-    }
+{% extends "base.html" %}
+{% block content %}
 
-    * { box-sizing: border-box; }
+<div style="max-width:1040px;margin:32px auto;padding:0 1.5rem;color:#e5e7eb;">
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(59,130,246,0.4), transparent 55%),
-        radial-gradient(circle at bottom right, rgba(236,72,153,0.35), transparent 60%),
-        #020617;
-      padding: 28px 14px 40px;
-    }
+  <!-- En-tête -->
+  <header style="margin-bottom:20px;">
+    <p style="font-size:0.85rem;opacity:.75;margin:0 0 4px;">
+      Dernière mise à jour : {{ now }}
+    </p>
+    <h1 style="
+      font-size:clamp(1.8rem,3vw,2.4rem);
+      margin:0 0 4px;
+      letter-spacing:-0.03em;
+    ">
+      Dashboard <span style="color:#38bdf8;">Ambassadeur Betty&nbsp;Bot</span>
+    </h1>
+    <p style="margin:0;font-size:0.92rem;opacity:.85;">
+      {{ ambassador.name }} &nbsp;•&nbsp; {{ ambassador.email }}
+    </p>
+  </header>
 
-    .wrap {
-      max-width: 1040px;
-      margin: 0 auto;
-    }
+  <!-- Lien à partager -->
+  <section style="
+    margin-bottom:18px;
+    padding:14px 16px;
+    border-radius:14px;
+    border:1px solid rgba(59,130,246,0.8);
+    background:radial-gradient(circle at top left,#0ea5e944,#1e293b 60%,#020617 100%);
+    font-size:0.9rem;
+  ">
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-bottom:6px;">
+      <span style="font-weight:600;">🔗 Votre lien à partager :</span>
+      <span style="
+        padding:4px 8px;
+        border-radius:999px;
+        border:1px solid rgba(148,163,184,0.8);
+        background:rgba(15,23,42,0.95);
+        font-size:0.85rem;
+      ">
+        ref = <strong>{{ ref }}</strong>
+      </span>
+    </div>
+    <p style="margin:0 0 6px;word-break:break-all;">
+      <a href="{{ share_link }}" target="_blank" rel="noopener"
+         style="color:#93c5fd;text-decoration:underline;">
+        {{ share_link }}
+      </a>
+    </p>
+    <p style="margin:0;font-size:0.82rem;opacity:.8;">
+      Utilisez ce lien dans vos emails, messages WhatsApp, posts réseaux sociaux, etc.
+      Toute inscription passée par ce lien est automatiquement rattachée à votre compte ambassadeur.
+    </p>
+  </section>
 
-    header {
-      margin-bottom: 18px;
-    }
+  <!-- NAV TABS -->
+  <nav style="
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
+    font-size:0.9rem;
+  ">
+    <button type="button"
+      class="tab-btn"
+      data-tab="stats"
+      style="
+        padding:8px 14px;
+        border-radius:999px;
+        border:1px solid rgba(148,163,184,0.8);
+        background:rgba(15,23,42,0.95);
+        color:#e5e7eb;
+        cursor:pointer;
+      ">
+      📊 Tableau de bord
+    </button>
+    <button type="button"
+      class="tab-btn"
+      data-tab="scripts"
+      style="
+        padding:8px 14px;
+        border-radius:999px;
+        border:1px solid transparent;
+        background:rgba(15,23,42,0.7);
+        color:#9ca3af;
+        cursor:pointer;
+      ">
+      🗣️ Scripts pour convaincre vos clients
+    </button>
+  </nav>
 
-    .kicker {
-      font-size: 0.78rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
+  <!-- CONTENU : STATS -->
+  <section id="tab-stats" class="tab-section" style="display:block;">
 
-    h1 {
-      margin: 0 0 6px;
-      font-size: clamp(1.7rem, 3vw, 2rem);
-      letter-spacing: -0.03em;
-    }
-
-    h1 span {
-      background: linear-gradient(135deg,#3b82f6,#ec4899);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .meta {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 2fr) minmax(0, 1.5fr);
-      gap: 20px;
-      margin-bottom: 22px;
-    }
-
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: minmax(0,1fr);
-      }
-    }
-
-    .card {
-      background: radial-gradient(circle at top left,#0f172a,#020617 60%);
-      border-radius: 22px;
-      padding: 20px 18px;
-      border: 1px solid rgba(148,163,184,0.5);
-      box-shadow: var(--shadow);
-    }
-
-    .card-header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: baseline;
-      margin-bottom: 12px;
-    }
-
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    .card-sub {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .chip {
-      font-size: 0.75rem;
-      border-radius: 999px;
-      border: 1px solid rgba(148,163,184,0.6);
-      padding: 4px 9px;
-      color: var(--muted);
-    }
-
-    .share-block {
-      margin-top: 8px;
-    }
-
-    .share-label {
-      font-size: 0.8rem;
-      margin-bottom: 4px;
-      color: var(--muted);
-    }
-
-    .share-row {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-bottom: 6px;
-    }
-
-    .share-input {
-      flex: 1;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(15,23,42,0.95);
-      color: var(--text);
-      font-size: 0.8rem;
-      padding: 8px 10px;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .btn-copy {
-      border-radius: 999px;
-      border: none;
-      padding: 8px 12px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-      background: linear-gradient(135deg,#3b82f6,#6366f1,#ec4899);
-      color: #f9fafb;
-      box-shadow: 0 10px 25px rgba(15,23,42,0.9);
-    }
-
-    .hint {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .stat {
-      flex: 1;
-      min-width: 110px;
-      padding: 10px 10px;
-      border-radius: 14px;
-      border: 1px solid rgba(148,163,184,0.5);
-      background: rgba(15,23,42,0.95);
-    }
-
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .stat-value {
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    .stat-value.positive {
-      color: #4ade80;
-    }
-
-    .payout {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 10px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8rem;
-      margin-top: 8px;
-    }
-
-    th, td {
-      padding: 8px 6px;
-      border-bottom: 1px solid rgba(31,41,55,0.9);
-      text-align: left;
-      white-space: nowrap;
-    }
-
-    th {
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--muted);
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    .paid {
-      color: #4ade80;
-      font-weight: 500;
-    }
-
-    .pending {
-      color: #facc15;
-      font-weight: 500;
-    }
-
-    .empty {
-      font-size: 0.8rem;
-      color: var(--muted);
-      padding-top: 6px;
-    }
-
-    footer {
-      margin-top: 20px;
-      font-size: 0.75rem;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    footer a {
-      color: #93c5fd;
-      text-decoration: none;
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="kicker">Ambassadeur Betty Bot</div>
-      <h1>
-        Bonjour <span>{{ ambassador["name"] }}</span>
-      </h1>
-      <div class="meta">
-        Email : {{ ambassador["email"] }} · Dernière mise à jour : {{ now }}
+    <!-- Statistiques -->
+    <div style="
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-bottom:18px;
+    ">
+      <div style="
+        flex:1 1 140px;
+        min-width:140px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(148,163,184,0.6);
+        background:rgba(15,23,42,0.95);
+      ">
+        <div style="font-size:0.8rem;opacity:.8;">Total abonnements générés</div>
+        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
+          {{ nb_ventes }}
+        </div>
       </div>
-    </header>
 
-    <div class="grid">
-      <!-- Colonne gauche : lien à partager + stats -->
-      <section class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Votre lien à partager</div>
-            <div class="card-sub">
-              Envoyez ce lien à vos contacts (emails, messages, réseaux sociaux).
-              Chaque abonnement pris via ce lien sera comptabilisé dans vos ventes.
-            </div>
-          </div>
-          <div class="chip">
-            Code : {{ ref }}
-          </div>
+      <div style="
+        flex:1 1 140px;
+        min-width:140px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(34,197,94,0.7);
+        background:rgba(6,95,70,0.4);
+      ">
+        <div style="font-size:0.8rem;opacity:.8;">Abonnements payés</div>
+        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
+          {{ nb_payees }}
         </div>
+      </div>
 
-        <div class="share-block">
-          <div class="share-label">Lien Betty Bot à partager</div>
-          <div class="share-row">
-            <div class="share-input" id="share-link">{{ share_link }}</div>
-            <button class="btn-copy" type="button" onclick="copyShareLink()">
-              Copier
-            </button>
-          </div>
-          <div class="hint">
-            💡 Astuce&nbsp;: ajoutez une phrase simple avec ce lien, par exemple :
-            « Betty répond à vos clients quand vous êtes occupé(e). »
-          </div>
+      <div style="
+        flex:1 1 140px;
+        min-width:140px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(234,179,8,0.7);
+        background:rgba(120,53,15,0.4);
+      ">
+        <div style="font-size:0.8rem;opacity:.8;">En attente de paiement</div>
+        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
+          {{ nb_en_attente }}
         </div>
+      </div>
 
-        <div class="stats">
-          <div class="stat">
-            <div class="stat-label">Ventes totales (via votre lien)</div>
-            <div class="stat-value">{{ nb_ventes }}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Ventes payées</div>
-            <div class="stat-value positive">{{ nb_payees }}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">En attente de paiement</div>
-            <div class="stat-value">{{ nb_en_attente }}</div>
-          </div>
-          <div class="stat">
-            <div class="stat-label">Total commissions estimées</div>
-            <div class="stat-value positive">{{ "%.2f"|format(total) }} €</div>
-          </div>
+      <div style="
+        flex:1 1 160px;
+        min-width:160px;
+        padding:12px 14px;
+        border-radius:14px;
+        border:1px solid rgba(59,130,246,0.8);
+        background:rgba(30,64,175,0.7);
+      ">
+        <div style="font-size:0.8rem;opacity:.8;">Total commissions versées / à verser*</div>
+        <div style="font-size:1.4rem;font-weight:700;margin-top:4px;">
+          {{ "%.2f"|format(total) }}&nbsp;€
         </div>
-
-        <div class="payout">
-          Méthode de paiement choisie :
-          <strong>{{ ambassador["payout_method"] }}</strong><br />
-          Détails fournis :
-          <span>{{ ambassador["payout_details"] }}</span><br />
-          Les virements sont effectués par Spectra Media AI selon les conditions
-          convenues (ex. une fois par mois au-delà d’un certain montant).
-        </div>
-      </section>
-
-      <!-- Colonne droite : détail des ventes -->
-      <section class="card">
-        <div class="card-header">
-          <div>
-            <div class="card-title">Détail des ventes</div>
-            <div class="card-sub">
-              Suivi des abonnements pris via votre lien. Les montants sont indicatifs.
-            </div>
-          </div>
-        </div>
-
-        {% if ventes %}
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Client</th>
-                <th>Montant</th>
-                <th>Commission (30%)</th>
-                <th>Statut</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for vente in ventes %}
-                <tr>
-                  <td>{{ vente["date"][:10] if vente["date"] else "-" }}</td>
-                  <td>{{ vente["customer_email"] or "-" }}</td>
-                  <td>{{ (vente["amount"] / 100) | round(2) }} €</td>
-                  <td>{{ ((vente["amount"] * 0.30) / 100) | round(2) }} €</td>
-                  <td>
-                    {% if vente["paid"] %}
-                      <span class="paid">✔️ Payé</span>
-                    {% else %}
-                      <span class="pending">En attente</span>
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <p class="empty">
-            Aucune vente enregistrée pour le moment. Partagez votre lien autour de vous
-            (artisans, commerçants, thérapeutes, professions libérales, etc.) pour
-            commencer à générer des commissions.
-          </p>
-        {% endif %}
-      </section>
+      </div>
     </div>
 
-    <footer>
-      Dashboard Ambassadeur Betty Bot · Propulsé par Spectra Media AI ·
-      <a href="mailto:spectramediabots@gmail.com">Contact</a>
-    </footer>
-  </div>
+    <p style="margin:0 0 12px;font-size:0.8rem;opacity:.7;">
+      * Montant basé sur les ventes marquées comme <strong>payées</strong> (colonne «&nbsp;Payé&nbsp;»).
+    </p>
 
-  <script>
-    function copyShareLink() {
-      const el = document.getElementById("share-link");
-      if (!el) return;
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-      try {
-        document.execCommand("copy");
-      } catch (e) {}
-      sel.removeAllRanges();
-      alert("Lien copié dans le presse-papiers ✅");
-    }
-  </script>
-</body>
-</html>
+    <!-- Tableau des ventes -->
+    <div style="
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,0.6);
+      overflow:hidden;
+      background:rgba(15,23,42,0.96);
+    ">
+      <table style="width:100%;border-collapse:collapse;font-size:0.86rem;">
+        <thead style="background:rgba(15,23,42,0.9);">
+          <tr>
+            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:left;">Date</th>
+            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:left;">Client</th>
+            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:right;">Montant</th>
+            <th style="padding:8px 10px;border-bottom:1px solid rgba(31,41,55,1);text-align:center;">Payé</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if ventes and ventes|length > 0 %}
+            {% for v in ventes %}
+              <tr style="border-top:1px solid rgba(31,41,55,1);">
+                <td style="padding:7px 10px;">
+                  {{ v["date"] }}
+                </td>
+                <td style="padding:7px 10px;">
+                  {{ v["customer_email"] or v["customer"] or "—" }}
+                </td>
+                <td style="padding:7px 10px;text-align:right;">
+                  {{ "%.2f"|format((v["amount"] or 0) / 100) }}&nbsp;€
+                </td>
+                <td style="padding:7px 10px;text-align:center;">
+                  {% if v["paid"] %}
+                    ✅
+                  {% else %}
+                    ⏳
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          {% else %}
+            <tr>
+              <td colspan="4" style="padding:10px;text-align:center;opacity:.7;">
+                Aucune vente enregistrée pour le moment. Partagez votre lien pour commencer à générer des abonnements.
+              </td>
+            </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <!-- CONTENU : SCRIPTS COMMERCIAUX -->
+  <section id="tab-scripts" class="tab-section" style="display:none;margin-top:8px;">
+
+    <h2 style="font-size:1.1rem;margin:0 0 8px;">
+      🗣️ Scripts pour convaincre vos clients
+    </h2>
+    <p style="margin:0 0 14px;font-size:0.9rem;opacity:.85;">
+      Voici deux scripts que vous pouvez adapter pour vos appels, vos emails ou vos messages.
+      Le but est de rester simple, humain et concret.
+    </p>
+
+    <!-- Script 1 : Appel téléphonique -->
+    <div style="
+      margin-bottom:16px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,0.7);
+      background:rgba(15,23,42,0.95);
+      font-size:0.9rem;
+    ">
+      <div style="font-weight:600;margin-bottom:6px;">
+        ☎️ Script d’appel téléphonique
+      </div>
+      <textarea readonly style="
+        width:100%;
+        min-height:150px;
+        border-radius:10px;
+        border:1px solid rgba(55,65,81,0.9);
+        background:#020617;
+        color:#e5e7eb;
+        font-size:0.86rem;
+        padding:10px;
+        resize:vertical;
+      ">{% raw %}Bonjour, je vous appelle parce que je me suis dit que Betty pouvait vraiment vous faire gagner du temps.
+
+Aujourd’hui, quand un visiteur arrive sur votre site en dehors de vos horaires, il fait quoi ?
+La plupart du temps, soit il part, soit il va voir un concurrent.
+
+Betty, c’est une assistante IA spécialisée dans votre métier. Elle discute avec les visiteurs comme une vraie personne,
+elle pose les bonnes questions (nom, email, téléphone, besoin) et vous envoie un récap clair par email.
+Comme ça, vous rappelez uniquement les vrais prospects, au bon moment.
+
+L’abonnement est à 79,90 € / mois, sans engagement. 
+Franchement, si Betty vous évite de perdre 1 ou 2 clients par mois, elle est rentabilisée.
+
+Je peux vous envoyer le lien pour que vous voyiez la démo et les infos ?
+Vous pourrez activer ou non votre abonnement après avoir vu comment elle travaille chez vous.{% endraw %}</textarea>
+    </div>
+
+    <!-- Script 2 : Message écrit (email / WhatsApp) -->
+    <div style="
+      margin-bottom:16px;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,0.7);
+      background:rgba(15,23,42,0.95);
+      font-size:0.9rem;
+    ">
+      <div style="font-weight:600;margin-bottom:6px;">
+        💬 Script pour email / WhatsApp / réseaux sociaux
+      </div>
+      <textarea readonly style="
+        width:100%;
+        min-height:180px;
+        border-radius:10px;
+        border:1px solid rgba(55,65,81,0.9);
+        background:#020617;
+        color:#e5e7eb;
+        font-size:0.86rem;
+        padding:10px;
+        resize:vertical;
+      ">{% raw %}Bonjour,
+
+Je me permets de vous écrire car je pense que votre activité pourrait vraiment profiter d’une assistante IA comme Betty.
+
+Betty, c’est un petit chat sur votre site qui discute avec vos visiteurs quand vous n’êtes pas disponible :
+– elle accueille les personnes,
+– pose les bonnes questions (nom, coordonnées, besoin),
+– et vous envoie un récap clair par email.
+
+Concrètement : au lieu de perdre des contacts en dehors de vos horaires, Betty les récupère et vous les met de côté.
+Vous n’avez plus qu’à les rappeler quand vous êtes disponible.
+
+L’abonnement est à 79,90 € / mois, sans engagement.
+Si Betty vous aide à transformer ne serait-ce qu’1 ou 2 nouveaux clients par mois, elle s’auto-finance largement.
+
+Vous pouvez découvrir la présentation ici :
+{{ share_link }}
+
+Si vous voulez, je peux aussi vous expliquer en 5 minutes comment ça se passe dans votre cas précis.{% endraw %}</textarea>
+    </div>
+
+    <p style="margin:0;font-size:0.82rem;opacity:.75;">
+      N’hésitez pas à adapter ces scripts avec vos propres mots. L’important est de rester simple&nbsp;:
+      <em>“Betty répond quand vous ne pouvez pas, elle garde les prospects au chaud et vous envoie des vrais clients à rappeler.”</em>
+    </p>
+  </section>
+</div>
+
+<script>
+  (function () {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const sections = {
+      stats: document.getElementById('tab-stats'),
+      scripts: document.getElementById('tab-scripts'),
+    };
+
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-tab');
+        Object.keys(sections).forEach(key => {
+          sections[key].style.display = (key === target) ? 'block' : 'none';
+        });
+        tabs.forEach(b => {
+          if (b === btn) {
+            b.style.borderColor = 'rgba(148,163,184,0.9)';
+            b.style.color = '#e5e7eb';
+          } else {
+            b.style.borderColor = 'transparent';
+            b.style.color = '#9ca3af';
+          }
+        });
+      });
+    });
+  })();
+</script>
+
+{% endblock %}
