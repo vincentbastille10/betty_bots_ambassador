@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section style="margin-top:10px;">
+  <h1 style="font-size:1.6rem;margin-bottom:10px;">Admin — Ambassadeurs</h1>
+  <p style="color:var(--muted);margin-bottom:14px;">
+    Liste complète des inscrits. (Page protégée par token)
+  </p>
+
+  <div style="overflow:auto;border:1px solid var(--border);border-radius:16px;">
+    <table style="width:100%;border-collapse:collapse;min-width:980px;background:#020617;">
+      <thead>
+        <tr style="text-align:left;border-bottom:1px solid var(--border);">
+          <th style="padding:10px;">ID</th>
+          <th style="padding:10px;">Nom</th>
+          <th style="padding:10px;">Email</th>
+          <th style="padding:10px;">Code</th>
+          <th style="padding:10px;">Paiement</th>
+          <th style="padding:10px;">Identifiant</th>
+          <th style="padding:10px;">Créé</th>
+          <th style="padding:10px;">Clics</th>
+          <th style="padding:10px;">Signups</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for a in ambassadors %}
+        <tr style="border-bottom:1px solid rgba(148,163,184,0.15);">
+          <td style="padding:10px;">{{ a.id }}</td>
+          <td style="padding:10px;">{{ a.name }}</td>
+          <td style="padding:10px;">{{ a.email }}</td>
+          <td style="padding:10px;font-weight:700;color:#a5b4fc;">{{ a.code }}</td>
+          <td style="padding:10px;">{{ a.payout_preference or "" }}</td>
+          <td style="padding:10px;">{{ a.payout_identifier or "" }}</td>
+          <td style="padding:10px;">{{ a.created_at }}</td>
+          <td style="padding:10px;">{{ a.clicks }}</td>
+          <td style="padding:10px;">{{ a.signups }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+{% endblock %}
