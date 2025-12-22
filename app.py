@@ -4,12 +4,11 @@ import secrets
 import datetime
 from contextlib import closing
 
-from flask import Flask, render_template, request, redirect, url_for, abort, Response
+from flask import Flask, render_template, request, redirect, url_for, abort, Response, jsonify
 
 # --------------------
 # dotenv (OPTIONNEL)
 # --------------------
-# Sur Render, tu n'en as pas besoin. En local, si python-dotenv est installé, ça charge .env
 try:
     from dotenv import load_dotenv  # type: ignore
     load_dotenv()
@@ -19,8 +18,6 @@ except Exception:
 # --------------------
 # Mailing (OPTIONNEL)
 # --------------------
-# mailing.py doit exposer:
-# send_ambassador_welcome_email(to_email, firstname, code, dashboard_url, short_link, tracking_target, is_new)
 try:
     from mailing import send_ambassador_welcome_email  # type: ignore
 except Exception:
@@ -32,17 +29,19 @@ except Exception:
 # --------------------
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# ✅ IMPORTANT : Render Disk => DB_PATH doit venir de l'env si présent
-# Ex: DB_PATH=/var/data/betty.db
+# Render Disk: DB_PATH doit venir de l'env si présent
+# Ex: DB_PATH=/var/data/ambassadors.db
 DB_PATH = (os.environ.get("DB_PATH") or "").strip()
 if not DB_PATH:
-    DB_PATH = os.path.join(BASE_DIR, "database", "betty.db")
+    DB_PATH = os.path.join(BASE_DIR, "database", "ambassadors.db")
 
 DB_DIR = os.path.dirname(DB_PATH)
 
 APP_BASE_URL = (os.environ.get("APP_BASE_URL") or "").strip().rstrip("/")
 if not APP_BASE_URL:
     APP_BASE_URL = None  # fallback url_for(_external=True)
+
+ADMIN_TOKEN = (os.environ.get("ADMIN_TOKEN") or "").strip()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
@@ -69,12 +68,17 @@ def init_db():
             """
             CREATE TABLE IF NOT EXISTS ambassadors (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+
                 name TEXT NOT NULL,
                 email TEXT NOT NULL UNIQUE,
                 code TEXT NOT NULL UNIQUE,
+
                 payout_preference TEXT,
                 payout_identifier TEXT,
+
                 created_at TEXT NOT NULL,
+                updated_at TEXT,
+
                 clicks INTEGER NOT NULL DEFAULT 0,
                 signups INTEGER NOT NULL DEFAULT 0
             )
@@ -83,12 +87,30 @@ def init_db():
         conn.commit()
 
 
+def db_migrate():
+    """Ajoute des colonnes si la DB existait déjà (sans casser)."""
+    with closing(get_db()) as conn:
+        cols = {r["name"] for r in conn.execute("PRAGMA table_info(ambassadors)").fetchall()}
+
+        def add(name: str, sql: str):
+            if name not in cols:
+                conn.execute(sql)
+
+        add("updated_at", "ALTER TABLE ambassadors ADD COLUMN updated_at TEXT")
+        conn.commit()
+
+
 init_db()
+db_migrate()
+
+
+def now_utc_iso():
+    return datetime.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
 
 
 def generate_code(conn: sqlite3.Connection) -> str:
-    """Génère un code ambassadeur lisible (6 chars) unique."""
-    for _ in range(30):
+    """Code lisible 6 chars unique."""
+    for _ in range(50):
         candidate = secrets.token_urlsafe(4)[:6]
         candidate = candidate.replace("-", "A").replace("_", "B").upper()
         row = conn.execute("SELECT 1 FROM ambassadors WHERE code = ?", (candidate,)).fetchone()
@@ -113,6 +135,12 @@ def build_tracking_target(code: str) -> str:
     return f"https://www.spectramedia.online/?ref={code}"
 
 
+def require_admin():
+    token = (request.args.get("token") or "").strip()
+    if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+        abort(403)
+
+
 # --------------------
 # Routes
 # --------------------
@@ -131,19 +159,21 @@ def inscription():
 
         payout_preference = (request.form.get("payout_preference") or "").strip()
         payout_identifier = (request.form.get("payout_identifier") or "").strip()
-
         accept_terms = (request.form.get("accept_terms") or "").strip()
 
-        # ✅ Obligatoires : name + email + accept_terms
+        # Obligatoires
         if not name or not email:
             error = "Merci de remplir au minimum votre nom et votre email."
+        elif "@" not in email or "." not in email:
+            error = "Email invalide."
         elif not accept_terms:
             error = "Merci de cocher la case d’acceptation des conditions pour continuer."
         else:
             payout_preference_db = payout_preference or None
             payout_identifier_db = payout_identifier or None
 
-            created_now = datetime.datetime.utcnow().isoformat()
+            created_now = now_utc_iso()
+            updated_now = created_now
             is_new = False
 
             with closing(get_db()) as conn:
@@ -155,7 +185,7 @@ def inscription():
                 if existing:
                     code = existing["code"]
 
-                    # update souple : on n’écrase pas avec du vide
+                    # update souple : on n’écrase JAMAIS avec du vide
                     updates = []
                     params = []
 
@@ -163,21 +193,24 @@ def inscription():
                         updates.append("name = ?")
                         params.append(name)
 
-                    if payout_preference_db is not None:
+                    if payout_preference_db is not None and payout_preference_db != (existing["payout_preference"] or None):
                         updates.append("payout_preference = ?")
                         params.append(payout_preference_db)
 
-                    if payout_identifier_db is not None:
+                    if payout_identifier_db is not None and payout_identifier_db != (existing["payout_identifier"] or None):
                         updates.append("payout_identifier = ?")
                         params.append(payout_identifier_db)
 
-                    if updates:
-                        params.append(email)
-                        conn.execute(
-                            f"UPDATE ambassadors SET {', '.join(updates)} WHERE email = ?",
-                            tuple(params),
-                        )
-                        conn.commit()
+                    # toujours updated_at
+                    updates.append("updated_at = ?")
+                    params.append(updated_now)
+
+                    params.append(email)
+                    conn.execute(
+                        f"UPDATE ambassadors SET {', '.join(updates)} WHERE email = ?",
+                        tuple(params),
+                    )
+                    conn.commit()
                 else:
                     code = generate_code(conn)
                     conn.execute(
@@ -185,16 +218,16 @@ def inscription():
                         INSERT INTO ambassadors (
                             name, email, code,
                             payout_preference, payout_identifier,
-                            created_at
+                            created_at, updated_at
                         )
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
                         """,
-                        (name, email, code, payout_preference_db, payout_identifier_db, created_now),
+                        (name, email, code, payout_preference_db, payout_identifier_db, created_now, updated_now),
                     )
                     conn.commit()
                     is_new = True
 
-            # ✅ Envoi mail AVANT redirect
+            # email de bienvenue (non bloquant)
             if send_ambassador_welcome_email:
                 try:
                     firstname = (name.split(" ")[0] if name else "")
@@ -214,7 +247,7 @@ def inscription():
                 except Exception:
                     app.logger.exception("Erreur envoi email Mailjet (inscription ambassadeur)")
 
-            # ✅ Redirection dashboard OK
+            # ✅ IMPORTANT : redirection immédiate dashboard
             return redirect(url_for("dashboard", code=code))
 
     return render_template("inscription.html", error=error)
@@ -227,7 +260,6 @@ def dashboard():
 
     with closing(get_db()) as conn:
         ambassador = None
-
         if code:
             ambassador = conn.execute("SELECT * FROM ambassadors WHERE code = ?", (code,)).fetchone()
         elif email:
@@ -236,8 +268,8 @@ def dashboard():
         if not ambassador:
             return render_template("dashboard.html", ambassador=None, stats=None, not_found=True)
 
-        clicks = int(ambassador["clicks"])
-        signups = int(ambassador["signups"])
+        clicks = int(ambassador["clicks"] or 0)
+        signups = int(ambassador["signups"] or 0)
 
         price = 79.90
         upfront_per = 0.30 * price
@@ -279,28 +311,30 @@ def redirect_with_ref(code):
 
     with closing(get_db()) as conn:
         ambassador = conn.execute("SELECT * FROM ambassadors WHERE code = ?", (code,)).fetchone()
-
-        ref_code = code
         if ambassador:
-            conn.execute("UPDATE ambassadors SET clicks = clicks + 1 WHERE id = ?", (ambassador["id"],))
+            conn.execute(
+                "UPDATE ambassadors SET clicks = clicks + 1, updated_at = ? WHERE id = ?",
+                (now_utc_iso(), ambassador["id"]),
+            )
             conn.commit()
-            ref_code = ambassador["code"]
 
-    return redirect(build_tracking_target(ref_code))
+    return redirect(build_tracking_target(code))
 
 
+# --------------------
+# ADMIN
+# --------------------
 @app.route("/admin/ambassadors")
 def admin_ambassadors():
-    token = (request.args.get("token") or "").strip()
-    admin_token = (os.environ.get("ADMIN_TOKEN") or "").strip()
-    if not admin_token or token != admin_token:
-        abort(403)
+    require_admin()
 
     with closing(get_db()) as conn:
         rows = conn.execute(
             """
-            SELECT id, name, email, code, payout_preference, payout_identifier,
-                   created_at, clicks, signups
+            SELECT id, name, email, code,
+                   payout_preference, payout_identifier,
+                   created_at, updated_at,
+                   clicks, signups
             FROM ambassadors
             ORDER BY datetime(created_at) DESC
             """
@@ -309,35 +343,58 @@ def admin_ambassadors():
     return render_template("admin_ambassadors.html", ambassadors=rows)
 
 
-@app.route("/admin/ambassadors.csv")
-def admin_ambassadors_csv():
-    token = (request.args.get("token") or "").strip()
-    admin_token = (os.environ.get("ADMIN_TOKEN") or "").strip()
-    if not admin_token or token != admin_token:
-        abort(403)
+@app.route("/admin/ambassadors.json")
+def admin_ambassadors_json():
+    require_admin()
 
     with closing(get_db()) as conn:
         rows = conn.execute(
             """
-            SELECT id, name, email, code, payout_preference, payout_identifier,
-                   created_at, clicks, signups
+            SELECT id, name, email, code,
+                   payout_preference, payout_identifier,
+                   created_at, updated_at,
+                   clicks, signups
             FROM ambassadors
             ORDER BY datetime(created_at) DESC
             """
         ).fetchall()
 
-    header = "id,name,email,code,payout_preference,payout_identifier,created_at,clicks,signups\n"
+    data = []
+    for r in rows:
+        data.append({k: r[k] for k in r.keys()})
+    return jsonify({"db": DB_PATH, "count": len(data), "ambassadors": data})
+
+
+@app.route("/admin/ambassadors.csv")
+def admin_ambassadors_csv():
+    require_admin()
+
+    with closing(get_db()) as conn:
+        rows = conn.execute(
+            """
+            SELECT id, name, email, code,
+                   payout_preference, payout_identifier,
+                   created_at, updated_at,
+                   clicks, signups
+            FROM ambassadors
+            ORDER BY datetime(created_at) DESC
+            """
+        ).fetchall()
+
+    header = "id,name,email,code,payout_preference,payout_identifier,created_at,updated_at,clicks,signups\n"
     lines = [header]
 
+    def esc(v):
+        v = "" if v is None else str(v)
+        v = v.replace('"', '""')
+        return f'"{v}"'
+
     for r in rows:
-        def esc(v):
-            v = "" if v is None else str(v)
-            v = v.replace('"', '""')
-            return f'"{v}"'
         lines.append(",".join([
             esc(r["id"]), esc(r["name"]), esc(r["email"]), esc(r["code"]),
             esc(r["payout_preference"]), esc(r["payout_identifier"]),
-            esc(r["created_at"]), esc(r["clicks"]), esc(r["signups"])
+            esc(r["created_at"]), esc(r["updated_at"]),
+            esc(r["clicks"]), esc(r["signups"]),
         ]) + "\n")
 
     return Response("".join(lines), mimetype="text/csv")
