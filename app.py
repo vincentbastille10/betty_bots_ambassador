@@ -6,14 +6,6 @@ from contextlib import closing
 
 from flask import Flask, render_template, request, redirect, url_for, abort, Response, jsonify
 
-BANNED_EMAILS = {
-    "hisseinadamabba28@gmail.com"
-}
-
-BANNED_CODES = {
-    "R1GNAG"
-}
-
 # --------------------
 # dotenv (OPTIONNEL)
 # --------------------
@@ -53,6 +45,48 @@ ADMIN_TOKEN = (os.environ.get("ADMIN_TOKEN") or "").strip()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
+
+
+# --------------------
+# ✅ Option B : bannissement dur par env vars (email + code)
+# --------------------
+# Formats acceptés : "a@b.com,c@d.com" ou avec espaces / sauts de ligne
+BANNED_EMAILS_RAW = os.environ.get("BANNED_EMAILS", "")
+BANNED_CODES_RAW = os.environ.get("BANNED_CODES", "")
+
+
+def _parse_csv_set(raw: str, mode: str = "lower"):
+    items = []
+    for part in raw.replace("\n", ",").split(","):
+        v = (part or "").strip()
+        if not v:
+            continue
+        if mode == "lower":
+            items.append(v.lower())
+        elif mode == "upper":
+            items.append(v.upper())
+        else:
+            items.append(v)
+    return set(items)
+
+
+BANNED_EMAILS = _parse_csv_set(BANNED_EMAILS_RAW, mode="lower")
+BANNED_CODES = _parse_csv_set(BANNED_CODES_RAW, mode="upper")
+
+
+def is_banned_email(email: str) -> bool:
+    e = (email or "").strip().lower()
+    return bool(e) and e in BANNED_EMAILS
+
+
+def is_banned_code(code: str) -> bool:
+    c = (code or "").strip().upper()
+    return bool(c) and c in BANNED_CODES
+
+
+def hard_block(message: str = "Accès indisponible."):
+    # Utilise ton template error.html si présent
+    return render_template("error.html", message=message), 403
 
 
 # --------------------
@@ -163,7 +197,13 @@ def inscription():
 
     if request.method == "POST":
         name = (request.form.get("name") or "").strip()
-        email = (request.form.get("email") or "").strip().lower()
+
+        # ✅ Normalisation + bannissement email (ton snippet)
+        email = (request.form.get("email") or "")
+        email = email.lower().strip()
+
+        if is_banned_email(email):
+            return hard_block("Inscription indisponible.")
 
         payout_preference = (request.form.get("payout_preference") or "").strip()
         payout_identifier = (request.form.get("payout_identifier") or "").strip()
@@ -193,6 +233,10 @@ def inscription():
                 if existing:
                     code = existing["code"]
 
+                    # ✅ Si le compte existant est banni (email/code), on bloque
+                    if is_banned_code(code) or is_banned_email(existing["email"]):
+                        return hard_block("Accès indisponible.")
+
                     # update souple : on n’écrase JAMAIS avec du vide
                     updates = []
                     params = []
@@ -209,7 +253,6 @@ def inscription():
                         updates.append("payout_identifier = ?")
                         params.append(payout_identifier_db)
 
-                    # toujours updated_at
                     updates.append("updated_at = ?")
                     params.append(updated_now)
 
@@ -221,6 +264,11 @@ def inscription():
                     conn.commit()
                 else:
                     code = generate_code(conn)
+
+                    # sécurité : si un code généré tombe dans la banlist
+                    if is_banned_code(code):
+                        return hard_block("Inscription indisponible.")
+
                     conn.execute(
                         """
                         INSERT INTO ambassadors (
@@ -255,7 +303,6 @@ def inscription():
                 except Exception:
                     app.logger.exception("Erreur envoi email Mailjet (inscription ambassadeur)")
 
-            # ✅ IMPORTANT : redirection immédiate dashboard
             return redirect(url_for("dashboard", code=code))
 
     return render_template("inscription.html", error=error)
@@ -266,6 +313,12 @@ def dashboard():
     code = (request.args.get("code") or request.args.get("ref") or "").strip().upper()
     email = (request.args.get("email") or "").strip().lower()
 
+    # ✅ bloquer l’accès même si l’ambassadeur existe en DB
+    if code and is_banned_code(code):
+        return hard_block("Accès indisponible.")
+    if email and is_banned_email(email):
+        return hard_block("Accès indisponible.")
+
     with closing(get_db()) as conn:
         ambassador = None
         if code:
@@ -275,6 +328,9 @@ def dashboard():
 
         if not ambassador:
             return render_template("dashboard.html", ambassador=None, stats=None, not_found=True)
+
+        if is_banned_email(ambassador["email"]) or is_banned_code(ambassador["code"]):
+            return hard_block("Accès indisponible.")
 
         clicks = int(ambassador["clicks"] or 0)
         signups = int(ambassador["signups"] or 0)
@@ -317,9 +373,16 @@ def dashboard():
 def redirect_with_ref(code):
     code = (code or "").strip().upper()
 
+    # ✅ lien mort si code banni : /l/R1GNAG => 404
+    if is_banned_code(code):
+        abort(404)
+
     with closing(get_db()) as conn:
         ambassador = conn.execute("SELECT * FROM ambassadors WHERE code = ?", (code,)).fetchone()
         if ambassador:
+            if is_banned_email(ambassador["email"]) or is_banned_code(ambassador["code"]):
+                abort(404)
+
             conn.execute(
                 "UPDATE ambassadors SET clicks = clicks + 1, updated_at = ? WHERE id = ?",
                 (now_utc_iso(), ambassador["id"]),
