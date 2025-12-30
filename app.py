@@ -6,6 +6,14 @@ from contextlib import closing
 
 from flask import Flask, render_template, request, redirect, url_for, abort, Response, jsonify
 
+BANNED_EMAILS = {
+    "hisseinadamabba28@gmail.com"
+}
+
+BANNED_CODES = {
+    "R1GNAG"
+}
+
 # --------------------
 # dotenv (OPTIONNEL)
 # --------------------
