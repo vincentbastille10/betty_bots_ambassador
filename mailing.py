@@ -12,7 +12,7 @@ def send_ambassador_welcome_email(
     code: str,
     dashboard_url: str,
     short_link: str,
-    tracking_target: str,
+    tracking_target: str,  # conservé pour compatibilité (mais NON affiché)
     is_new: bool = True,
 ):
     """
@@ -44,13 +44,13 @@ def send_ambassador_welcome_email(
 
     hello = f"Bonjour {firstname}," if firstname else "Bonjour,"
 
+    # ✅ On n'affiche PLUS le lien final (tracking_target) pour éviter la confusion
     text_part = (
         f"{hello}\n\n"
         f"Bienvenue dans le programme Ambassadeurs Betty Bot.\n\n"
         f"Voici vos liens personnels (gardez ce mail) :\n"
         f"- Dashboard : {dashboard_url}\n"
         f"- Lien à partager (traqué) : {short_link}\n"
-        f"- Lien final (Spectra Media) : {tracking_target}\n"
         f"- Votre code : {code}\n\n"
         f"— Spectra Media AI\n"
     )
@@ -73,11 +73,6 @@ def send_ambassador_welcome_email(
         <p style="margin:0 0 10px;">
           <strong>Lien à partager (traqué)</strong><br>
           <a href="{short_link}" style="color:#2563eb">{short_link}</a>
-        </p>
-
-        <p style="margin:0 0 10px;">
-          <strong>Lien final (Spectra Media)</strong><br>
-          <a href="{tracking_target}" style="color:#2563eb">{tracking_target}</a>
         </p>
 
         <p style="margin:0;">
