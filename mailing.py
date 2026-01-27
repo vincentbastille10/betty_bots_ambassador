@@ -28,9 +28,9 @@ def send_ambassador_welcome_email(
     api_key = _get_env("MAILJET_API_KEY")
     api_secret = _get_env("MAILJET_API_SECRET")
 
-    mail_from_email = _get_env("MAIL_FROM_EMAIL", "spectramediabots@gmail.com")
-    mail_from_name = _get_env("MAIL_FROM_NAME", "Betty Bots")
-    mail_reply_to = _get_env("MAIL_REPLY_TO", mail_from_email)
+    mail_from_email = _get_env("MAIL_FROM_EMAIL", "no-reply@spectramedia.online")
+    mail_from_name = _get_env("MAIL_FROM_NAME", "Betty Bots — Spectra Media")
+    mail_reply_to = _get_env("MAIL_REPLY_TO", "no-reply@spectramedia.online")
 
     if not api_key or not api_secret:
         raise RuntimeError("MAILJET_API_KEY / MAILJET_API_SECRET manquantes")
