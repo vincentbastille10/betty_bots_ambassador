@@ -36,7 +36,11 @@ if not APP_BASE_URL:
 
 ADMIN_TOKEN = (os.environ.get("ADMIN_TOKEN") or "").strip()
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder="templates",
+    static_folder="static"
+)
 app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-change-me")
 
 
