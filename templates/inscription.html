@@ -59,10 +59,10 @@
       </h1>
 
       <p style="font-size:15px;opacity:.92;margin:0 0 14px;max-width:460px;">
-        Betty Bot répond aux clients quand les pros sont occupés ou hors ligne.
-        Votre rôle : parler de Betty à votre réseau (artisans, commerçants, coachs,
-        avocats, thérapeutes…), et toucher <strong>50&nbsp;€</strong> à chaque abonnement vendu
-        (<strong>abonnement à 129&nbsp;€</strong> pour le client pro).
+        Betty Bot répond instantanément aux visiteurs, capte leurs coordonnées, filtre et organise chaque prospect — puis vous envoie un résumé net.
+        Votre rôle : présenter Betty à votre réseau (artisans, commerçants, coachs,
+        avocats, thérapeutes…) et toucher <strong>100&nbsp;€</strong> à chaque abonnement validé
+        (abonnement à <strong>179&nbsp;€/mois</strong> en France, <strong>149&nbsp;$/mois</strong> aux États-Unis).
       </p>
 
       <!-- TAGS -->
@@ -73,7 +73,7 @@
               border:1px solid rgba(148,163,184,0.7);
               background:rgba(15,23,42,0.45);
             ">
-          50&nbsp;€ par vente
+          100&nbsp;€ par vente validée
         </span>
         <span style="
               padding:6px 12px;
@@ -96,7 +96,10 @@
       <!-- CHECKLIST -->
       <ul style="list-style:none;padding:0;margin:0 0 14px;font-size:14px;">
         <li style="margin-bottom:5px;">
-          ✅ <strong>1 client pro</strong> = <strong>50&nbsp;€</strong> pour vous.
+          ✅ <strong>1 client validé</strong> = <strong>100&nbsp;€</strong> pour vous.
+        </li>
+        <li style="margin-bottom:5px;">
+          ✅ Commission versée après la fin de la période d'essai (paiement confirmé).
         </li>
         <li style="margin-bottom:5px;">
           ✅ Vous partagez simplement un lien Betty Bot personnalisé avec votre code.
@@ -149,8 +152,9 @@
           border:1px solid rgba(52,211,153,0.7);
         ">
         <strong>Rémunération :</strong>
-        <strong>50&nbsp;€</strong> <u>tout pile</u> à chaque abonnement vendu
-        (le bot coûte <strong>129&nbsp;€</strong> au client pro).
+        <strong>100&nbsp;€</strong> <u>par vente validée</u>
+        (179&nbsp;€/mois pour le client en France · 149&nbsp;$/mois aux USA).<br>
+        <span style="opacity:.85;">Commission versée uniquement après validation du paiement (fin de période d'essai). Pas de salaire fixe.</span>
       </div>
 
       {% if error %}
@@ -322,7 +326,7 @@
     </div>
   </div>
 
-  <!-- BLOC EXEMPLES DE REVENUS (sous la carte principale) -->
+  <!-- BLOC COMBIEN JE GAGNE + EXEMPLES DE REVENUS -->
   <div style="
       margin-top:24px;
       border-radius:20px;
@@ -332,30 +336,49 @@
       color:#e5e7eb;
       font-size:14px;
     ">
-    <h2 style="font-size:1.1rem;margin-top:0;margin-bottom:8px;">
-      📊 Exemples de revenus possibles (sur 6&nbsp;mois)
+    <h2 style="font-size:1.3rem;margin-top:0;margin-bottom:6px;">
+      💰 Combien je gagne&nbsp;?
     </h2>
-    <p style="margin:0 0 6px;opacity:.9;">
-      Hypothèse : vous vendez des abonnements à <strong>129&nbsp;€</strong> (prix côté client).
-      Votre commission est de <strong>50&nbsp;€</strong> <u>par abonnement vendu</u>.
+    <p style="margin:0 0 12px;opacity:.9;font-size:13px;">
+      Chaque vente validée (après période d'essai) vous rapporte <strong>100&nbsp;€</strong>, qu'il s'agisse d'un client français (179&nbsp;€/mois) ou américain (149&nbsp;$/mois).
+      Pas de salaire fixe — uniquement de la commission sur les ventes réellement confirmées.
     </p>
-    <ul style="margin:6px 0 0 18px;padding:0;">
-      <li style="margin-bottom:6px;">
-        <strong>1 abonnement vendu par semaine</strong> (≈ 4 / mois, soit 24 en 6&nbsp;mois) :
-        <ul style="margin:4px 0 0 16px;padding:0;">
-          <li>Commission : 50&nbsp;€ × 24 = <strong>1&nbsp;200&nbsp;€</strong></li>
-        </ul>
-      </li>
-      <li>
-        <strong>5 abonnements vendus par semaine</strong> (≈ 20 / mois, soit 120 en 6&nbsp;mois) :
-        <ul style="margin:4px 0 0 16px;padding:0;">
-          <li>Commission : 50&nbsp;€ × 120 = <strong>6&nbsp;000&nbsp;€</strong></li>
-        </ul>
-      </li>
-    </ul>
-    <p style="margin:8px 0 0;font-size:13px;opacity:.85;">
-      Ce sont des ordres de grandeur pour vous aider à vous projeter. Vous pouvez utiliser ce programme
-      comme un <strong>complément de revenu</strong> ou en faire une vraie activité de vente de solutions IA.
+
+    <!-- Grille simple -->
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:14px;">
+      <div style="flex:1 1 140px;padding:14px 16px;border-radius:16px;border:1px solid rgba(52,211,153,0.6);background:rgba(52,211,153,0.06);text-align:center;">
+        <div style="font-size:11px;opacity:.7;margin-bottom:4px;">1 vente</div>
+        <div style="font-size:1.7rem;font-weight:800;color:#4ade80;">100&nbsp;€</div>
+      </div>
+      <div style="flex:1 1 140px;padding:14px 16px;border-radius:16px;border:1px solid rgba(99,102,241,0.6);background:rgba(99,102,241,0.07);text-align:center;">
+        <div style="font-size:11px;opacity:.7;margin-bottom:4px;">5 ventes</div>
+        <div style="font-size:1.7rem;font-weight:800;color:#818cf8;">500&nbsp;€</div>
+      </div>
+      <div style="flex:1 1 140px;padding:14px 16px;border-radius:16px;border:1px solid rgba(236,72,153,0.6);background:rgba(236,72,153,0.07);text-align:center;">
+        <div style="font-size:11px;opacity:.7;margin-bottom:4px;">10 ventes</div>
+        <div style="font-size:1.7rem;font-weight:800;color:#f472b6;">1&nbsp;000&nbsp;€</div>
+      </div>
+    </div>
+
+    <!-- Motivation -->
+    <div style="
+        padding:12px 14px;
+        border-radius:14px;
+        background:rgba(15,23,42,0.6);
+        border:1px solid rgba(148,163,184,0.3);
+        font-size:13px;
+        margin-bottom:10px;
+      ">
+      <div style="font-weight:700;margin-bottom:6px;">Pourquoi c'est un bon business&nbsp;?</div>
+      <ul style="margin:0 0 0 14px;padding:0;color:rgba(229,231,235,0.9);line-height:1.7;">
+        <li><strong>Aucune gestion client complexe</strong> — vous présentez Betty, partagez un lien, c'est tout.</li>
+        <li><strong>Business simple</strong> — un script, un lien, une conversation. Pas de réunions, pas de suivi technique.</li>
+        <li><strong>Revenu récurrent potentiel</strong> — plus vous construisez votre réseau, plus les commissions s'accumulent.</li>
+      </ul>
+    </div>
+
+    <p style="margin:0;font-size:12px;opacity:.7;">
+      Les commissions sont versées après confirmation du paiement client (fin de période d'essai). Ce sont des ordres de grandeur indicatifs — vos résultats dépendent de votre activité commerciale.
     </p>
   </div>
 
